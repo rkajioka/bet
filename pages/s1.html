@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S1 – General Sportsbook Knowledge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/lang.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"
+  ></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+      });
+    });
+  </script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="page page-section">
+    <section class="page-heading">
+      <div class="lang lang-pt"><h1>S1 – Conhecimentos Gerais de Sportsbook</h1></div>
+      <div class="lang lang-en"><h1>S1 – General Sportsbook Knowledge</h1></div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt">
+          <h2>Pergunta 1: Qual é o overround (payback) para este mercado da NBA e o que isso significa?</h2>
+        </div>
+        <div class="lang lang-en">
+          <h2>Question 1: What is the overround (payback) for this NBA market and what does this signify?</h2>
+        </div>
+      </header>
+      <div class="qa-image">
+        <img class="qa-img-small" src="../assets/nbamarket.png" style="width:50%" alt="NBA Market Example" />
+      </div>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>No mercado “NBA – Winning Conference”, as duas seleções estão com odds de 1.90.</p>
+          <p>Para entender a margem da casa, primeiro transformamos essas odds em probabilidade implícita:</p>
+          <p>\[ P = \frac{1}{1.90} \approx 0.5263 \]</p>
+          <p>Ou seja, cada lado representa cerca de \(52.63\%\).</p>
+          <p>Somando as duas probabilidades:</p>
+          <p>\[ 0.5263 + 0.5263 = 1.0526 \quad (\text{ou } 105.26\%) \]</p>
+          <p>Tudo acima de 100% é a margem da casa, conhecida como overround:</p>
+          <p>\[ \text{Overround} = 105.26\% - 100\% = 5.26\% \]</p>
+          <p>O payback — quanto retorna aos apostadores no longo prazo — é o inverso dessa soma:</p>
+          <p>\[ \text{Payback} = \frac{1}{1.0526} = 95\% \]</p>
+          <p>
+            Em termos simples, essas contas mostram que a casa embute uma margem de \(5.26\%\) nesse mercado. Isso
+            significa que, mesmo em um cenário equilibrado entre as duas seleções, a casa mantém uma vantagem
+            estatística. Ao mesmo tempo, um payback de 95% mantém o mercado competitivo para o usuário, dentro do padrão
+            esperado para um binário de pré-jogo. É um exemplo clássico de como a casa ajusta as odds para equilibrar
+            risco e rentabilidade sem comprometer a atratividade do produto.
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>In the “NBA – Winning Conference” market, both selections are priced at 1.90.</p>
+          <p>To understand the bookmaker margin, we first convert the odds into implied probability:</p>
+          <p>\[ P = \frac{1}{1.90} \approx 0.5263 \]</p>
+          <p>This means each side represents about 52.63%.</p>
+          <p>Adding both probabilities:</p>
+          <p>\[ 0.5263 + 0.5263 = 1.0526 \quad (105.26\%) \]</p>
+          <p>Anything above 100% is the bookmaker’s margin, known as the overround:</p>
+          <p>\[ \text{Overround} = 105.26\% - 100\% = 5.26\% \]</p>
+          <p>The payback , how much is returned to bettors in the long run, is the inverse of this total:</p>
+          <p>\[ \text{Payback} = \frac{1}{1.0526} = 95\% \]</p>
+          <p>
+            In simple terms, this shows that the bookmaker includes a 5.26% margin in this market. Even in a balanced
+            matchup, the house keeps a statistical advantage. At the same time, a 95% payback keeps the market
+            competitive and within the normal range for a pre-game binary market. It is a classic example of how a
+            sportsbook adjusts odds to balance risk and profitability without hurting product appeal.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 2: A linha equilibrada para Alcaraz x Berrittini abriu em 20.5 games totais e fechou em 22.5 no início do evento. Qual seleção apresenta o maior closing line value?</h2></div>
+        <div class="lang lang-en"><h2>Question 2: The balanced line for Alcaraz v Berritini opens at 20.5 total games and closes at 22.5 at event start. Which selection has the most closing line value?</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>No mercado de totais, o fato de a linha para Alcaraz x Berrettini abrir em 20.5 games e fechar em 22.5 mostra que o mercado passou a estimar um jogo mais longo, seja por atualização de modelo, volume apostado ou alguma nova informação relevante. Em apostas esportivas, essa diferença entre o ponto em que a aposta foi feita e o ponto em que a linha encerra é chamada de Closing Line Value (CLV), e funciona como uma medida objetiva da qualidade do preço obtido em relação ao consenso final do mercado.</p>
+          <p>Quando a linha sobe, como neste caso (de 20.5 para 22.5), quem apostou no Over em um número mais baixo capturou valor: apostar Over 20.5 exige menos games para vencer do que o total implícito pela linha final de 22.5. Já o Under 20.5 perde valor porque se move contra o ajuste do mercado, o Over 22.5 não captura CLV (pois está no mesmo ponto da linha de fechamento), e o Under 22.5 também vai na direção contrária ao movimento.</p>
+          <p>Portanto, a seleção com maior Closing Line Value é a alternativa a) Over 20.5, pois é a única que se beneficia integralmente do deslocamento da linha.</p>
+        </div>
+        <div class="lang lang-en">
+          <p>In a totals market, the fact that the line for Alcaraz vs Berrettini opened at 20.5 games and closed at 22.5 shows that the market began to expect a longer match. This can happen because of model updates, betting volume, or new information becoming available. In sports betting, the difference between the line at the moment you place your bet and the line at closing time is called Closing Line Value (CLV). It is an objective way to measure how good your price was compared to the final market opinion.</p>
+          <p>When the line moves upward, as in this case (from 20.5 to 22.5), anyone who bet Over 20.5 captured value: you need fewer games to win the bet compared to the closing line of 22.5. Under 20.5 loses value because it goes against the direction of the market move, Over 22.5 captures no CLV (it is exactly at the closing point), and Under 22.5 also moves against the upward correction.</p>
+          <p>Therefore, the selection with the highest Closing Line Value is option a) Over 20.5, because it fully benefits from the move from 20.5 to 22.5.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 3: De acordo com essas odds, qual é o resultado mais provável da partida?</h2></div>
+        <div class="lang lang-en"><h2>Question 3: According to these odds, what is the most likely outcome of the match?</h2></div>
+      </header>
+      <div class="qa-image">
+        <img class="qa-img-small" src="../assets/atpindian.png" style="width:50%" alt="Odds Example" />
+      </div>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+            Quando analisamos um mercado de "resultado correto" em uma partida de tênis, a forma mais objetiva de identificar o resultado mais provável é converter cada odd em probabilidade implícita e comparar os valores. A probabilidade implícita de cada placar é dada por \( P = 1/\text{odd} \), o que permite observar como a casa está ordenando a chance relativa dos resultados.
+          </p>
+
+          <p>
+            \[ P(1\!-\!2) = \frac{1}{4.1} \approx 24.39\% \quad P(2\!-\!1) = \frac{1}{4.5} \approx 22.22\% \]
+          </p>
+
+          <p>
+            \[ P(2\!-\!0) = \frac{1}{3.1} \approx 32.26\% \quad P(0\!-\!2) = \frac{1}{2.75} \approx 36.36\% \]
+          </p>
+
+          <p>
+            Comparando os valores, o resultado com maior probabilidade implícita é 0–2, ou seja, vitória de Thompson em dois sets. A odd 2.75, a menor dentre todas, indica que este é o cenário mais provável dentro do conjunto de placares possíveis. Os demais resultados apresentam probabilidades menores e são considerados desfechos relativamente menos prováveis.
+          </p>
+
+          <p>
+            Assim, segundo as odds oferecidas, o desfecho mais provável da partida é Thompson vencer por 2 sets a 0 (0–2).
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+            When we analyse a correct score market in a tennis match, the most objective way to identify the most likely outcome is to convert each odd into its implied probability and compare the values.The implied probability of each score is given by \( P = 1/\text{odd} \), which shows how the bookmaker ranks the relative chance of each result.
+          </p>
+
+          <p>
+            \[ P(1\!-\!2) = \frac{1}{4.1} \approx 24.39\% \quad P(2\!-\!1) = \frac{1}{4.5} \approx 22.22\% \]
+          </p>
+
+          <p>
+            \[ P(2\!-\!0) = \frac{1}{3.1} \approx 32.26\% \quad P(0\!-\!2) = \frac{1}{2.75} \approx 36.36\% \]
+          </p>
+
+          <p>
+            Comparing the values, the outcome with the highest implied probability is 0–2, meaning Thompson winning in two sets. The odd 2.75, the lowest among all, indicates that this is the most likely scenario according to the bookmaker’s pricing.
+          </p>
+
+          <p>
+            Therefore, based on the offered odds, the most likely outcome is Thompson winning 2–0 (0–2).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-navigation">
+      <div class="nav-bottom">
+        <a class="btn btn-gold light" href="index.html">
+          <span class="lang lang-pt">Anterior: Home</span>
+          <span class="lang lang-en">Previous: Home</span>
+        </a>
+        <a class="btn btn-gold" href="s2_1.html">
+          <span class="lang lang-pt">Próximo: S2 Modelling 1</span>
+          <span class="lang lang-en">Next: S2 Modelling 1</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+</body>
+</html>
+
+

@@ -1,0 +1,2895 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S2 – Modelling 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/lang.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"
+  ></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+      });
+    });
+  </script>
+  <!-- Prism highlight -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-python.min.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="page page-section">
+    <section class="page-heading">
+      <div class="lang lang-pt"><h1>S2 – Modelagem 2</h1></div>
+      <div class="lang lang-en"><h1>S2 – Modelling 2</h1></div>
+    </section>
+
+    <section class="main-question">
+      <div class="lang lang-pt">
+        <h2>Pergunta Principal:</h2>
+        <p>
+          Vamos assumir que uma "BetMGM Football Cup" fictícia será disputada na próxima semana entre Inglaterra,
+          França, Alemanha e Holanda. Considere que todos os jogadores de cada país estão saudáveis, as partidas
+          ocorrem em campo neutro e cada seleção enfrenta todas as outras uma vez (3 rodadas). São concedidos 3
+          pontos por vitória e 1 ponto por empate.
+        </p>
+      </div>
+      <div class="lang lang-en">
+        <h2>Main Question:</h2>
+        <p>
+          Let’s assume that a fake "BetMGM Football Cup" is planned to be played next week between England, France,
+          Germany, Netherlands. Assume all players for each country are healthy throughout, matches are played on
+          neutral site, and each team plays each other once (3 rounds of matches). 3 Points are awarded for a win, 1
+          point for a draw.
+        </p>
+      </div>
+      <div class="qa-image">
+        <img class="qa-img-small" src="../assets/betmgm_cup.png" style="width:50%" alt="BetMGM Cup" />
+      </div>
+      <div class="qa-image">
+        <img class="qa-img-small" src="../assets/betmgm_cup2.png" style="width:50%" alt="BetMGM Cup2" />
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 1: Precifique o mercado da 3ª rodada (Round 3 match odds) em odds decimais.</h2></div>
+        <div class="lang lang-en"><h2>Question 1: Price the Round 3 match odds in decimal odds.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+            Vou estruturar como resposta de case: explico o raciocínio, mostro as fórmulas principais e entrego as odds finais da 3ª rodada.
+          </p>
+
+          <h3>Ideia geral</h3>
+
+          <p>
+            O objetivo é <strong>precificar os jogos da 3ª rodada</strong>:
+          </p>
+
+          <ul style="margin-left: 20px;">
+            <li>Inglaterra vs Alemanha</li>
+            <li>França vs Holanda</li>
+          </ul>
+
+          <p>
+            Usando apenas a informação já embutida nas odds das rodadas 1 e 2.
+          </p>
+
+          <p>A lógica é:</p>
+
+          <ol style="margin-left: 20px;">
+            <li>Extrair <strong>probabilidades implícitas “justas”</strong> (sem margem) dos mercados 1X2 já dados.</li>
+            <li>A partir dessas probabilidades, inferir <strong>forças relativas</strong> de cada seleção (ratings).</li>
+            <li>Assumir uma <strong>probabilidade média de empate</strong> comum a todos os jogos.</li>
+            <li>Usar esses ratings para gerar probabilidades para os jogos da 3ª rodada e então convertê-las em <strong>odds decimais com margem</strong> semelhante à dos mercados originais.</li>
+          </ol>
+          <p> </p>
+
+
+          <h3>Passo 1 – Probabilidades implícitas “justas”</h3>
+
+          <p>
+            Para cada jogo já precificado, começo removendo a margem do 1X2.  
+            Dado um conjunto de odds \( \text{odd}_H, \text{odd}_D, \text{odd}_A \), calculo as probabilidades implícitas normalizadas:
+          </p>
+
+          <p>
+            \[
+            p_H = \frac{\frac{1}{\text{odd}_H}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+            p_D = \frac{\frac{1}{\text{odd}_D}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+            p_A = \frac{\frac{1}{\text{odd}_A}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}.
+            \]
+          </p>
+
+          <p>
+            A média das probabilidades de empate nos 4 jogos fica em torno de:
+          </p>
+
+          <p>
+            \[
+            d \approx 0.218
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+          <h3>Passo 2 – Ratings das seleções (força relativa)</h3>
+
+          <p>
+            Uso um modelo tipo <strong>Bradley–Terry</strong> onde:
+          </p>
+
+          <p>
+            \[
+            \frac{p_A}{p_B} \approx \frac{r_A}{r_B}
+            \]
+          </p>
+
+          <p>
+            Isso gera um sistema baseado nos confrontos conhecidos. Após resolver, o conjunto de forças relativo é:
+          </p>
+
+          <p>
+            \[
+            r_{\text{ENG}} : r_{\text{GER}} : r_{\text{FRA}} : r_{\text{NED}}
+            \approx 6.35 : 1.32 : 1.25 : 1.00.
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Passo 3 – Probabilidades para os jogos da 3ª rodada</h3>
+
+          <p>
+            Considero:
+          </p>
+
+          <ul style="margin-left: 20px;">
+            <li>empate constante \( d \approx 0.218 \)</li>
+            <li>vitórias distribuídas proporcionalmente aos ratings</li>
+          </ul>
+
+          <p>
+            Fórmulas:
+          </p>
+
+          <p>
+            \[
+            p_D = d
+            \]
+          </p>
+
+          <p>
+            \[
+            p_i = (1 - d)\,\frac{r_i}{r_i + r_j}, \qquad
+            p_j = (1 - d)\,\frac{r_j}{r_i + r_j}.
+            \]
+          </p>
+
+          <h4>4.1. Inglaterra vs Alemanha</h4>
+
+          <p>
+            \[
+            p_{\text{ENG}} \approx 0.647,\quad
+            p_D \approx 0.218,\quad
+            p_{\text{GER}} \approx 0.135.
+            \]
+          </p>
+
+          <h4>4.2. França vs Holanda</h4>
+
+          <p>
+            \[
+            p_{\text{FRA}} \approx 0.435,\quad
+            p_D \approx 0.218,\quad
+            p_{\text{NED}} \approx 0.347.
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Passo 4 – Odds justas e aplicação de margem</h3>
+
+          <p>
+            Odds justas:
+          </p>
+
+          <p>
+            \[
+            \text{odd}_k^{\text{fair}} = \frac{1}{p_k}.
+            \]
+          </p>
+
+          <p>
+            Overround médio observado:
+          </p>
+
+          <p>
+            \[
+            \text{book} \approx 1.053
+            \]
+          </p>
+
+          <p>
+            Probabilidades com margem:
+          </p>
+
+          <p>
+            \[
+            p_k^{(\text{book})} = p_k \cdot \text{book}
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Odds finais propostas – Round 3</h3>
+          <p> </p>
+          <h4>Inglaterra vs Alemanha</h4>
+
+          <ul style="margin-left: 20px;">
+            <li>Inglaterra: <strong>1.47</strong></li>
+            <li>Empate: <strong>4.36</strong></li>
+            <li>Alemanha: <strong>7.05</strong></li>
+          </ul>
+
+          <h4>França vs Holanda</h4>
+
+          <ul style="margin-left: 20px;">
+            <li>França: <strong>2.18</strong></li>
+            <li>Empate: <strong>4.36</strong></li>
+            <li>Holanda: <strong>2.73</strong></li>
+          </ul>
+
+        </div>
+        <div class="lang lang-en">
+          <p>
+            I will structure this as a case answer: I explain the logic, show the main formulas, and present the final odds for Round 3.
+          </p>
+
+          <h3>Main idea</h3>
+
+          <p>
+            The goal is to <strong>price the Round 3 matches</strong>:
+          </p>
+
+          <ul style="margin-left: 20px;">
+            <li>England vs Germany</li>
+            <li>France vs Netherlands</li>
+          </ul>
+
+          <p>
+            Using only the information already implied in the odds from Rounds 1 and 2.
+          </p>
+
+          <p>The logic is:</p>
+
+          <ol style="margin-left: 20px;">
+            <li>Extract <strong>fair implied probabilities</strong> (without margin) from the 1X2 markets.</li>
+            <li>Use these probabilities to infer the <strong>relative strength</strong> of each team (ratings).</li>
+            <li>Assume a <strong>common average draw probability</strong> for all matches.</li>
+            <li>Use these ratings to create the Round 3 probabilities and convert them into <strong>decimal odds with margin</strong> similar to the original markets.</li>
+          </ol>
+          <p> </p>
+
+          <h3>Step 1 – Fair implied probabilities</h3>
+
+          <p>
+            For each priced match, I remove the margin from the 1X2 odds.  
+            Given odds \( \text{odd}_H, \text{odd}_D, \text{odd}_A \), the normalized implied probabilities are:
+          </p>
+
+          <p>
+            \[
+            p_H = \frac{\frac{1}{\text{odd}_H}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+            p_D = \frac{\frac{1}{\text{odd}_D}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+            p_A = \frac{\frac{1}{\text{odd}_A}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}.
+            \]
+          </p>
+
+          <p>
+            The average draw probability across the four known matches is:
+          </p>
+
+          <p>
+            \[
+            d \approx 0.218
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Step 2 – Team ratings (relative strength)</h3>
+
+          <p>
+            I use a simple <strong>Bradley–Terry</strong> model:
+          </p>
+
+          <p>
+            \[
+            \frac{p_A}{p_B} \approx \frac{r_A}{r_B}
+            \]
+          </p>
+
+          <p>
+            This gives a system based on the known matchups. After solving it, the relative team strengths are:
+          </p>
+
+          <p>
+            \[
+            r_{\text{ENG}} : r_{\text{GER}} : r_{\text{FRA}} : r_{\text{NED}}
+            \approx 6.35 : 1.32 : 1.25 : 1.00.
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Step 3 – Probabilities for Round 3 matches</h3>
+
+          <p>
+            I assume:
+          </p>
+
+          <ul style="margin-left: 20px;">
+            <li>a constant draw probability \( d \approx 0.218 \)</li>
+            <li>wins split in proportion to the ratings</li>
+          </ul>
+
+          <p>
+            Formulas:
+          </p>
+
+          <p>
+            \[
+            p_D = d
+            \]
+          </p>
+
+          <p>
+            \[
+            p_i = (1 - d)\,\frac{r_i}{r_i + r_j}, \qquad
+            p_j = (1 - d)\,\frac{r_j}{r_i + r_j}.
+            \]
+          </p>
+
+          <h4>4.1. England vs Germany</h4>
+
+          <p>
+            \[
+            p_{\text{ENG}} \approx 0.647,\quad
+            p_D \approx 0.218,\quad
+            p_{\text{GER}} \approx 0.135.
+            \]
+          </p>
+
+          <h4>4.2. France vs Netherlands</h4>
+
+          <p>
+            \[
+            p_{\text{FRA}} \approx 0.435,\quad
+            p_D \approx 0.218,\quad
+            p_{\text{NED}} \approx 0.347.
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Step 4 – Fair odds and margin application</h3>
+
+          <p>
+            Fair odds:
+          </p>
+
+          <p>
+            \[
+            \text{odd}_k^{\text{fair}} = \frac{1}{p_k}.
+            \]
+          </p>
+
+          <p>
+            Average overround observed:
+          </p>
+
+          <p>
+            \[
+            \text{book} \approx 1.053
+            \]
+          </p>
+
+          <p>
+            Probabilities with margin:
+          </p>
+
+          <p>
+            \[
+            p_k^{(\text{book})} = p_k \cdot \text{book}
+            \]
+          </p>
+
+          </ol>
+          <p> </p>
+
+          <h3>Final priced odds – Round 3</h3>
+          <p> </p>
+
+          <h4>England vs Germany</h4>
+
+          <ul style="margin-left: 20px;">
+            <li>England: <strong>1.47</strong></li>
+            <li>Draw: <strong>4.36</strong></li>
+            <li>Germany: <strong>7.05</strong></li>
+          </ul>
+
+          <h4>France vs Netherlands</h4>
+
+          <ul style="margin-left: 20px;">
+            <li>France: <strong>2.18</strong></li>
+            <li>Draw: <strong>4.36</strong></li>
+            <li>Netherlands: <strong>2.73</strong></li>
+          </ul>
+
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import numpy as np
+import pandas as pd
+
+# ------------------------------------------
+# Input: Round 1 and 2 odds (1X2)
+# ------------------------------------------
+games = [
+    # Round 1
+    ("ENG", "FRA", 1.36, 5.7, 7.0),
+    ("GER", "NED", 2.20, 3.9, 2.95),
+
+    # Round 2
+    ("FRA", "GER", 2.65, 3.45, 2.55),
+    ("ENG", "NED", 1.36, 5.10, 8.50)
+]
+
+teams = ["ENG","FRA","GER","NED"]
+
+# ------------------------------------------
+# Step 1 – Convert odds to normalized probabilities
+# ------------------------------------------
+prob_rows = []
+draw_probs = []
+
+for home, away, oh, od, oa in games:
+    inv = np.array([1/oh, 1/od, 1/oa])
+    p = inv / inv.sum()
+    prob_rows.append([home, away, p[0], p[1], p[2]])
+    draw_probs.append(p[1])
+
+df = pd.DataFrame(prob_rows, columns=["Home","Away","pH","pD","pA"])
+
+# Average draw probability
+d = np.mean(draw_probs)
+
+# ------------------------------------------
+# Step 2 – Bradley-Terry rating estimation
+# (use only home-win vs away-win ratio)
+# log(r_home/r_away) = log(pH/pA)
+# Solve by least squares
+# ------------------------------------------
+A = []
+b = []
+
+for _, row in df.iterrows():
+    h, a = row.Home, row.Away
+    A_row = [1 if t==h else -1 if t==a else 0 for t in teams]
+    A.append(A_row)
+    b.append(np.log(row.pH / row.pA))
+
+A = np.array(A)
+b = np.array(b)
+
+# Fix ENG as reference (rating=0 in log scale)
+A = A[:,1:]  # remove ENG column
+sol, _, _, _ = np.linalg.lstsq(A, b, rcond=None)
+
+log_ratings = np.concatenate([[0], sol])   # add ENG=0
+ratings = np.exp(log_ratings)
+ratings = ratings / ratings.min()          # normalize smallest = 1
+
+r = dict(zip(teams, ratings))
+
+# ------------------------------------------
+# Step 3 – Function to project match probabilities
+# ------------------------------------------
+def project_probs(team1, team2, d):
+    r1, r2 = r[team1], r[team2]
+    pD = d
+    p1 = (1 - d) * (r1 / (r1 + r2))
+    p2 = (1 - d) * (r2 / (r1 + r2))
+    return p1, pD, p2
+
+# ------------------------------------------
+# Step 4 – Compute fair odds for Round 3
+# ------------------------------------------
+def fair_odds(p):
+    return 1 / np.array(p)
+
+# Average overround from original markets
+overrounds = []
+for _, row in df.iterrows():
+    ov = (1/row.pH + 1/row.pD + 1/row.pA)
+    overrounds.append(ov)
+avg_book = np.mean(overrounds)
+
+# ------------------------------------------
+# Round 3 pricing
+# ------------------------------------------
+matches_round3 = [("ENG","GER"), ("FRA","NED")]
+
+for t1, t2 in matches_round3:
+    pH, pD, pA = project_probs(t1, t2, d)
+
+    # apply book
+    pH2, pD2, pA2 = pH*avg_book, pD*avg_book, pA*avg_book
+    odds = 1/np.array([pH2,pD2,pA2])
+
+    print(f"{t1} vs {t2}")
+    print("Home:", round(odds[0],2), 
+          "Draw:", round(odds[1],2), 
+          "Away:", round(odds[2],2))
+    print()
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 2: Precifique o mercado de Vencedor do Torneio.</h2></div>
+        <div class="lang lang-en"><h2>Question 2: Price the Tournament Winner market.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<p>
+  O objetivo é precificar o mercado <strong>Tournament Winner</strong> para o torneio fictício BetMGM Football Cup, formado por quatro seleções (Inglaterra, França, Alemanha e Holanda) em formato round-robin, onde cada equipe disputa três partidas. O sistema de pontos é simples: vitória vale 3 pontos, empate vale 1 ponto e derrota vale 0 pontos.  
+</p>
+
+<p>
+  A partir das odds 1X2 das rodadas 1 e 2, já calculamos probabilidades implícitas “justas”, estimamos a força relativa das equipes e projetamos as probabilidades dos jogos da terceira rodada. Com esses elementos, é possível modelar a distribuição final de pontos e obter as probabilidades de título.
+</p>
+
+<h3>Probabilidades por partida</h3>
+
+<p>
+  Cada partida possui probabilidades implícitas de vitória, empate e derrota.  
+  Para odds \( \text{odd}_H, \text{odd}_D, \text{odd}_A \), as probabilidades normalizadas são:
+</p>
+
+<p>
+  \[
+  p_H = \frac{\frac{1}{\text{odd}_H}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+  p_D = \frac{\frac{1}{\text{odd}_D}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+  p_A = \frac{\frac{1}{\text{odd}_A}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}.
+  \]
+</p>
+
+<p>
+  Essas probabilidades foram calculadas para:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG × FRA</li>
+  <li>GER × NED</li>
+  <li>FRA × GER</li>
+  <li>ENG × NED</li>
+</ul>
+
+<p>
+  e também para os jogos da terceira rodada, utilizando o modelo de ratings ajustado anteriormente.
+</p>
+
+<h3>Modelo de classificação final</h3>
+
+<p>
+  Considerando as probabilidades de todos os seis jogos, a forma mais consistente de estimar as chances de título é utilizar simulação Monte Carlo.
+</p>
+
+<p>Em cada simulação:</p>
+
+<ul style="margin-left: 20px;">
+  <li>O resultado de cada partida é sorteado com base em \( p_\text{vitória}, p_\text{empate}, p_\text{derrota} \).</li>
+  <li>A pontuação das seleções é atualizada.</li>
+  <li>É identificado o time (ou os times) com maior número de pontos.</li>
+  <li>Em caso de empate na liderança, cada líder recebe um peso proporcional.</li>
+</ul>
+
+<p>
+  Após \( N \) simulações, a probabilidade estimada de título da seleção \( k \) é:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_k = \frac{1}{N}\sum_{s=1}^{N} \frac{\mathbf{1}\{k \in \text{líderes}_s\}}{\#\text{líderes}_s}.
+  \]
+</p>
+
+<p>
+  Usando as probabilidades derivadas de todas as partidas, os valores aproximados são:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{ENG} \approx 0.67, \quad
+  \hat{\pi}_{GER} \approx 0.12, \quad
+  \hat{\pi}_{FRA} \approx 0.12, \quad
+  \hat{\pi}_{NED} \approx 0.09.
+  \]
+</p>
+
+<p>
+  Esses resultados mostram a vantagem clara da Inglaterra e o equilíbrio entre Alemanha e França.
+</p>
+
+<h3>Odds justas e margem</h3>
+
+<p>
+  As odds justas são dadas por:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_k = \frac{1}{\hat{\pi}_k}.
+  \]
+</p>
+
+<p>O resultado é:</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG ≈ 1.49</li>
+  <li>GER ≈ 8.05</li>
+  <li>FRA ≈ 8.51</li>
+  <li>NED ≈ 11.35</li>
+</ul>
+
+<p>
+  Mercados de outrights normalmente utilizam margens mais altas (cerca de 10%).  
+  Aplicando um fator de book de aproximadamente \( 1.10 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_k = \frac{\text{odd}^{\text{fair}}_k}{1.10}.
+  \]
+</p>
+
+<p>As odds finais são:</p>
+
+<ul style="margin-left: 20px;">
+  <li>England: <strong>1.36</strong></li>
+  <li>Germany: <strong>7.32</strong></li>
+  <li>France: <strong>7.74</strong></li>
+  <li>Netherlands: <strong>10.32</strong></li>
+</ul>
+
+<p>
+  Esses valores são consistentes com todas as informações dos mercados 1X2 das rodadas anteriores e refletem o nível de força implícito entre as seleções.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<p>
+  The goal is to price the <strong>Tournament Winner</strong> market for the fictional BetMGM Football Cup, played by four teams (England, France, Germany and Netherlands) in a round-robin format where each team plays three matches. The point system is simple: a win gives 3 points, a draw gives 1 point and a loss gives 0 points.
+</p>
+
+<p>
+  Based on the 1X2 odds from Rounds 1 and 2, we already calculated fair implied probabilities, estimated team strength ratings and projected the probabilities for the Round 3 matches. With these inputs, we can model the final points distribution and compute the tournament winner probabilities.
+</p>
+
+<h3>Match probabilities</h3>
+
+<p>
+  Each match has implied probabilities of win, draw and loss.  
+  For odds \( \text{odd}_H, \text{odd}_D, \text{odd}_A \), the normalized probabilities are:
+</p>
+
+<p>
+  \[
+  p_H = \frac{\frac{1}{\text{odd}_H}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+  p_D = \frac{\frac{1}{\text{odd}_D}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}, \quad
+  p_A = \frac{\frac{1}{\text{odd}_A}}{\frac{1}{\text{odd}_H} + \frac{1}{\text{odd}_D} + \frac{1}{\text{odd}_A}}.
+  \]
+</p>
+
+<p>
+  These probabilities were computed for:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG × FRA</li>
+  <li>GER × NED</li>
+  <li>FRA × GER</li>
+  <li>ENG × NED</li>
+</ul>
+
+<p>
+  and also for the Round 3 matches, using the rating model adjusted earlier.
+</p>
+
+<h3>Final standings model</h3>
+
+<p>
+  With the probabilities of all six matches, the most consistent way to estimate the chance of winning the tournament is to run a Monte Carlo simulation.
+</p>
+
+<p>In each simulation:</p>
+
+<ul style="margin-left: 20px;">
+  <li>The result of every match is drawn using \( p_\text{win}, p_\text{draw}, p_\text{loss} \).</li>
+  <li>Points are updated for all teams.</li>
+  <li>The team with the highest points is identified.</li>
+  <li>If more than one team is tied at the top, each receives a fractional share.</li>
+</ul>
+
+<p>
+  After \( N \) simulations, the estimated tournament winning probability for team \( k \) is:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_k = \frac{1}{N}\sum_{s=1}^{N} \frac{\mathbf{1}\{k \in \text{leaders}_s\}}{\#\text{leaders}_s}.
+  \]
+</p>
+
+<p>
+  Using the match probabilities from all rounds, the approximate results are:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{ENG} \approx 0.67, \quad
+  \hat{\pi}_{GER} \approx 0.12, \quad
+  \hat{\pi}_{FRA} \approx 0.12, \quad
+  \hat{\pi}_{NED} \approx 0.09.
+  \]
+</p>
+
+<p>
+  These values show the strong expected advantage of England and the balance between Germany and France.
+</p>
+
+<h3>Fair odds and margin</h3>
+
+<p>
+  Fair odds come from:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_k = \frac{1}{\hat{\pi}_k}.
+  \]
+</p>
+
+<p>The results are:</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG ≈ 1.49</li>
+  <li>GER ≈ 8.05</li>
+  <li>FRA ≈ 8.51</li>
+  <li>NED ≈ 11.35</li>
+</ul>
+
+<p>
+  Outright markets usually apply higher margins (around 10 percent).  
+  Using a book factor of about \( 1.10 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_k = \frac{\text{odd}^{\text{fair}}_k}{1.10}.
+  \]
+</p>
+
+<p>Final commercial odds:</p>
+
+<ul style="margin-left: 20px;">
+  <li>England: <strong>1.36</strong></li>
+  <li>Germany: <strong>7.32</strong></li>
+  <li>France: <strong>7.74</strong></li>
+  <li>Netherlands: <strong>10.32</strong></li>
+</ul>
+
+<p>
+  These odds are consistent with the information implied in the 1X2 markets and with the relative team strength estimated earlier.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">  
+import numpy as np
+import pandas as pd
+
+# ---------------------------
+# Odds das rodadas 1 e 2
+# ---------------------------
+games = [
+    ("ENG","FRA",1.36,5.7,7.0),
+    ("GER","NED",2.20,3.9,2.95),
+    ("FRA","GER",2.65,3.45,2.55),
+    ("ENG","NED",1.36,5.10,8.50)
+]
+
+teams = ["ENG","FRA","GER","NED"]
+
+# ---------------------------
+# Remove margem dos 1X2
+# ---------------------------
+prob_rows=[]
+draw_probs=[]
+
+for h,a,oh,od,oa in games:
+    inv = np.array([1/oh, 1/od, 1/oa])
+    p = inv / inv.sum()
+    prob_rows.append([h,a,p[0],p[1],p[2]])
+    draw_probs.append(p[1])
+
+df = pd.DataFrame(prob_rows,columns=["Home","Away","pH","pD","pA"])
+d = np.mean(draw_probs)  # prob. média de empate
+
+# ---------------------------
+# Estima ratings Bradley–Terry
+# ---------------------------
+A=[]
+b=[]
+
+for _,row in df.iterrows():
+    home,away=row.Home,row.Away
+    A_row=[1 if t==home else -1 if t==away else 0 for t in teams]
+    A.append(A_row)
+    b.append(np.log(row.pH/row.pA))
+
+A=np.array(A)
+b=np.array(b)
+
+A=A[:,1:]  # fixa ENG como referência
+coeff,_ ,_,_ = np.linalg.lstsq(A,b,rcond=None)
+
+log_r = np.concatenate([[0], coeff])  # ENG=0
+r = np.exp(log_r)
+r = r / r.min()
+ratings = dict(zip(teams,r))
+
+# ---------------------------
+# Probabilidades dos jogos R3
+# ---------------------------
+def match_probs(t1,t2,d):
+    r1,r2=ratings[t1],ratings[t2]
+    pD=d
+    p1=(1-d)*(r1/(r1+r2))
+    p2=(1-d)*(r2/(r1+r2))
+    return p1,pD,p2
+
+# Jogos da rodada 3
+r3 = {
+    ("ENG","GER"): match_probs("ENG","GER",d),
+    ("FRA","NED"): match_probs("FRA","NED",d)
+}
+
+# ---------------------------
+# Simulação Monte Carlo
+# ---------------------------
+all_games = {
+    ("ENG","FRA"): df.loc[0,["pH","pD","pA"]].values,
+    ("GER","NED"): df.loc[1,["pH","pD","pA"]].values,
+    ("FRA","GER"): df.loc[2,["pH","pD","pA"]].values,
+    ("ENG","NED"): df.loc[3,["pH","pD","pA"]].values,
+    ("ENG","GER"): r3[("ENG","GER")],
+    ("FRA","NED"): r3[("FRA","NED")]
+}
+
+def simulate(N=200000):
+    counts={t:0 for t in teams}
+    for _ in range(N):
+        pts={t:0 for t in teams}
+        for (t1,t2),(p1,pD,p2) in all_games.items():
+            outcome=np.random.choice([0,1,2],p=[p1,pD,p2])
+            if outcome==0: pts[t1]+=3
+            elif outcome==2: pts[t2]+=3
+            else:
+                pts[t1]+=1
+                pts[t2]+=1
+        max_pts=max(pts.values())
+        leaders=[t for t,v in pts.items() if v==max_pts]
+        for t in leaders:
+            counts[t]+=1/len(leaders)
+    for t in teams:
+        counts[t]/=N
+    return counts
+
+res = simulate()
+
+# odds justas
+fair={t:1/res[t] for t in teams}
+
+# book de 10%
+B=1.10
+final_odds={t:fair[t]/B for t in teams}
+
+print("Probabilidades:",res)
+print("Odds finais:",final_odds)
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 3: Precifique o mercado de Equipe com Mais Gols no Torneio.</h2></div>
+        <div class="lang lang-en"><h2>Question 3: Price the Highest Scoring Team market.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<p>
+  O objetivo é precificar o mercado <strong>Highest Scoring Team</strong> — qual seleção marcará mais gols ao longo da BetMGM Football Cup. As equipes participantes são: Inglaterra (ENG), França (FRA), Alemanha (GER) e Holanda (NED).  
+</p>
+
+<p>
+  Utilizaremos apenas a informação implícita nos mercados de totais (Over/Under) e nos mercados 1X2, seguindo a premissa prática: em média, a equipe com odds de vitória mais baixas tende a marcar mais gols.
+</p>
+
+<h3>Do mercado de gols para gols esperados por partida</h3>
+
+<p>
+  Para cada partida, temos um mercado de totais com linha \( L \) (2.5 ou 3.5 gols) e odds para Over e Under.  
+  Como exemplo, considere Inglaterra vs França (linha 3.5):
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Over 3.5: 1.83</li>
+  <li>Under 3.5: 1.91</li>
+</ul>
+
+<p>
+  Primeiro, removemos a margem.  
+  Com odds decimais \( O_{\text{over}}, O_{\text{under}} \), definimos:
+</p>
+
+<p>
+  \[
+  \tilde{p}_{\text{over}} = \frac{1}{O_{\text{over}}}, \quad
+  \tilde{p}_{\text{under}} = \frac{1}{O_{\text{under}}}
+  \]
+</p>
+
+<p>
+  \[
+  p_{\text{over}} = 
+  \frac{\tilde{p}_{\text{over}}}{\tilde{p}_{\text{over}} + \tilde{p}_{\text{under}}}, \qquad
+  p_{\text{under}} = 
+  \frac{\tilde{p}_{\text{under}}}{\tilde{p}_{\text{over}} + \tilde{p}_{\text{under}}}.
+  \]
+</p>
+
+<p>
+  Assumimos que o total de gols \( G \) segue uma Poisson(\( \lambda \)).  
+  Assim:
+</p>
+
+<p>
+  \[
+  P(G \ge 4) = p_{\text{over}} \quad \text{(linha 3.5)}
+  \]
+</p>
+
+<p>
+  \[
+  P(G \ge 3) = p_{\text{over}} \quad \text{(linha 2.5)}
+  \]
+</p>
+
+<p>
+  Para linha 3.5:
+</p>
+
+<p>
+  \[
+  P(G \ge 4)
+  = 1 - \sum_{n=0}^{3} e^{-\lambda}\frac{\lambda^n}{n!}
+  = p_{\text{over}}.
+  \]
+</p>
+
+<p>
+  Resolvemos numericamente para \( \lambda \).  
+  Repetindo esse cálculo para cada partida, obtemos:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG–FRA: \( \lambda \approx 3.72 \)</li>
+  <li>GER–NED: \( \lambda \approx 3.22 \)</li>
+  <li>FRA–GER: \( \lambda \approx 2.87 \)</li>
+  <li>ENG–NED: \( \lambda \approx 2.52 \)</li>
+</ul>
+
+<p>
+  Esses valores representam a expectativa total de gols por partida, de acordo com os mercados Over/Under.
+</p>
+
+<h3>Alocação de gols esperados entre as equipes</h3>
+
+<p>
+  Agora dividimos \( \lambda \) entre os dois times de cada jogo.  
+  Para isso, usamos somente as probabilidades de vitória dos mercados 1X2.  
+  Odds mais curtas → maior expectativa ofensiva.
+</p>
+
+<p>
+  A partir das odds \( O_H, O_D, O_A \):
+</p>
+
+<p>
+  \[
+  p_H = \frac{\frac{1}{O_H}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \quad
+  p_D = \frac{\frac{1}{O_D}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \quad
+  p_A = \frac{\frac{1}{O_A}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}.
+  \]
+</p>
+
+<p>
+  Para dividir os gols, usamos apenas \( p_H \) e \( p_A \).  
+  Definimos:
+</p>
+
+<p>
+  \[
+  s_H = \frac{p_H}{p_H + p_A}, \qquad
+  s_A = \frac{p_A}{p_H + p_A}
+  \]
+</p>
+
+<p>
+  \[
+  E[\text{gols}_H] = \lambda \cdot s_H, \qquad
+  E[\text{gols}_A] = \lambda \cdot s_A.
+  \]
+</p>
+
+<p>
+  Aplicando aos quatro jogos e somando por time:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG: ≈ 5.29 gols em 2 jogos</li>
+  <li>GER: ≈ 3.31 gols em 2 jogos</li>
+  <li>FRA: ≈ 2.01 gols em 2 jogos</li>
+  <li>NED: ≈ 1.72 gols em 2 jogos</li>
+</ul>
+
+<p>
+  Como cada equipe disputará 3 partidas, ajustamos por \( \frac{3}{2} \):
+</p>
+
+<p>
+  \[
+  \lambda_{ENG} \approx 7.94, \quad
+  \lambda_{GER} \approx 4.96, \quad
+  \lambda_{FRA} \approx 3.02, \quad
+  \lambda_{NED} \approx 2.58.
+  \]
+</p>
+
+<p>
+  Esses valores refletem o padrão dos mercados: Inglaterra com maior força ofensiva, seguida por Alemanha, e França/Holanda em níveis mais baixos.
+</p>
+
+<h3>Probabilidade de ser a equipe mais goleadora</h3>
+
+<p>
+  Modelamos o total de gols do torneio como:
+</p>
+
+<p>
+  \[
+  G_{\text{team}} \sim \text{Poisson}(\lambda_{\text{team}})
+  \]
+</p>
+
+<p>
+  A probabilidade de a seleção \( k \) ser a Highest Scoring Team é:
+</p>
+
+<p>
+  \[
+  \pi_k = 
+  P(G_k > G_j, \ \forall j \neq k)
+  \ \text{(com divisão fracionada em caso de empate)}.
+  \]
+</p>
+
+<p>
+  Na prática, calculamos via simulação Monte Carlo:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Sorteamos \( G_{ENG}, G_{GER}, G_{FRA}, G_{NED} \) de Poisson com médias correspondentes.</li>
+  <li>Identificamos a maior contagem de gols.</li>
+  <li>Dividimos 1 unidade entre os líderes.</li>
+  <li>Repetimos para \( N = 200{,}000 \) simulações.</li>
+</ul>
+
+<p>
+  A estimativa final é:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{ENG} \approx 0.76, \quad
+  \hat{\pi}_{GER} \approx 0.19, \quad
+  \hat{\pi}_{FRA} \approx 0.035, \quad
+  \hat{\pi}_{NED} \approx 0.020.
+  \]
+</p>
+
+<p>
+  Isso mostra Inglaterra como forte favorita, Alemanha como segunda força e França/Holanda com probabilidades baixas.
+</p>
+
+<h3>Odds justas e aplicação de margem</h3>
+
+<p>
+  Odds justas:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_k = \frac{1}{\hat{\pi}_k}.
+  \]
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG: ≈ 1.32</li>
+  <li>GER: ≈ 5.36</li>
+  <li>FRA: ≈ 28.87</li>
+  <li>NED: ≈ 49.43</li>
+</ul>
+
+<p>
+  Assumindo overround de cerca de 12% (\( B \approx 1.12 \)):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_k = \frac{\text{odd}^{\text{fair}}_k}{B}.
+  \]
+</p>
+
+<p>
+  Odds finais em decimal:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>England: <strong>1.18</strong></li>
+  <li>Germany: <strong>4.79</strong></li>
+  <li>France: <strong>25.77</strong></li>
+  <li>Netherlands: <strong>44.13</strong></li>
+</ul>
+
+<p>
+  Esses valores refletem de forma consistente as expectativas ofensivas implícitas nos mercados e a estrutura de gols projetada para cada seleção.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<p>
+  The goal is to price the <strong>Highest Scoring Team</strong> market for the BetMGM Football Cup. The teams are England (ENG), France (FRA), Germany (GER) and Netherlands (NED).  
+</p>
+
+<p>
+  We use only the information implied in the totals (Over/Under) markets and the 1X2 markets, following the practical idea that teams with lower win odds tend to score more goals on average.
+</p>
+
+<h3>From totals market to expected goals per match</h3>
+
+<p>
+  Each match has a totals market with a line \( L \) (2.5 or 3.5 goals) and Over and Under odds.  
+  For example, England vs France with line 3.5:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Over 3.5: 1.83</li>
+  <li>Under 3.5: 1.91</li>
+</ul>
+
+<p>
+  First, we remove the margin.  
+  With decimal odds \( O_{\text{over}}, O_{\text{under}} \), define:
+</p>
+
+<p>
+  \[
+  \tilde{p}_{\text{over}} = \frac{1}{O_{\text{over}}}, \quad
+  \tilde{p}_{\text{under}} = \frac{1}{O_{\text{under}}}
+  \]
+</p>
+
+<p>
+  \[
+  p_{\text{over}} = 
+  \frac{\tilde{p}_{\text{over}}}{\tilde{p}_{\text{over}} + \tilde{p}_{\text{under}}}, \qquad
+  p_{\text{under}} = 
+  \frac{\tilde{p}_{\text{under}}}{\tilde{p}_{\text{over}} + \tilde{p}_{\text{under}}}.
+  \]
+</p>
+
+<p>
+  We assume the total number of goals \( G \) follows a Poisson(\( \lambda \)).  
+  Then:
+</p>
+
+<p>
+  \[
+  P(G \ge 4) = p_{\text{over}} \quad \text{(line 3.5)}
+  \]
+</p>
+
+<p>
+  \[
+  P(G \ge 3) = p_{\text{over}} \quad \text{(line 2.5)}
+  \]
+</p>
+
+<p>
+  For line 3.5:
+</p>
+
+<p>
+  \[
+  P(G \ge 4)
+  = 1 - \sum_{n=0}^{3} e^{-\lambda}\frac{\lambda^n}{n!}
+  = p_{\text{over}}.
+  \]
+</p>
+
+<p>
+  Solving for \( \lambda \) for each match gives:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG–FRA: \( \lambda \approx 3.72 \)</li>
+  <li>GER–NED: \( \lambda \approx 3.22 \)</li>
+  <li>FRA–GER: \( \lambda \approx 2.87 \)</li>
+  <li>ENG–NED: \( \lambda \approx 2.52 \)</li>
+</ul>
+
+<p>
+  These values represent the total expected goals per match from the totals markets.
+</p>
+
+<h3>Allocating expected goals between teams</h3>
+
+<p>
+  We now split \( \lambda \) between the two teams in each match.  
+  We use only the win probabilities from the 1X2 markets.  
+  Lower win odds imply higher expected scoring.
+</p>
+
+<p>
+  From odds \( O_H, O_D, O_A \), the fair probabilities are:
+</p>
+
+<p>
+  \[
+  p_H = \frac{\frac{1}{O_H}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \quad
+  p_D = \frac{\frac{1}{O_D}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \quad
+  p_A = \frac{\frac{1}{O_A}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}.
+  \]
+</p>
+
+<p>
+  To split goals, we use only \( p_H \) and \( p_A \).  
+  Define:
+</p>
+
+<p>
+  \[
+  s_H = \frac{p_H}{p_H + p_A}, \qquad
+  s_A = \frac{p_A}{p_H + p_A}
+  \]
+</p>
+
+<p>
+  \[
+  E[\text{goals}_H] = \lambda \cdot s_H, \qquad
+  E[\text{goals}_A] = \lambda \cdot s_A.
+  \]
+</p>
+
+<p>
+  Applying this to the four matches and summing by team gives expected goals in two matches:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG: ≈ 5.29 goals in 2 matches</li>
+  <li>GER: ≈ 3.31 goals in 2 matches</li>
+  <li>FRA: ≈ 2.01 goals in 2 matches</li>
+  <li>NED: ≈ 1.72 goals in 2 matches</li>
+</ul>
+
+<p>
+  Each team plays three matches, so we adjust by \( \frac{3}{2} \):
+</p>
+
+<p>
+  \[
+  \lambda_{ENG} \approx 7.94, \quad
+  \lambda_{GER} \approx 4.96, \quad
+  \lambda_{FRA} \approx 3.02, \quad
+  \lambda_{NED} \approx 2.58.
+  \]
+</p>
+
+<p>
+  These values match the market information: England with the highest expected scoring, Germany next, then France and Netherlands.
+</p>
+
+<h3>Probability of being the highest scoring team</h3>
+
+<p>
+  We model the total goals of each team as:
+</p>
+
+<p>
+  \[
+  G_{\text{team}} \sim \text{Poisson}(\lambda_{\text{team}})
+  \]
+</p>
+
+<p>
+  The probability that team \( k \) is the highest scoring team is:
+</p>
+
+<p>
+  \[
+  \pi_k = P(G_k > G_j, \ \forall j \neq k)
+  \]
+</p>
+
+<p>
+  with fractional treatment in case of ties.
+</p>
+
+<p>
+  In practice, we use Monte Carlo simulation:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Draw \( G_{ENG}, G_{GER}, G_{FRA}, G_{NED} \) from Poisson with their means.</li>
+  <li>Find the highest goal count.</li>
+  <li>Split one unit equally among all tied teams.</li>
+  <li>Repeat for \( N = 200{,}000 \) simulations.</li>
+</ul>
+
+<p>
+  The estimated probabilities are:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{ENG} \approx 0.76, \quad
+  \hat{\pi}_{GER} \approx 0.19, \quad
+  \hat{\pi}_{FRA} \approx 0.035, \quad
+  \hat{\pi}_{NED} \approx 0.020.
+  \]
+</p>
+
+<p>
+  England is the clear statistical favorite, followed by Germany, with France and Netherlands far behind.
+</p>
+
+<h3>Fair odds and margin</h3>
+
+<p>
+  Fair odds are given by:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_k = \frac{1}{\hat{\pi}_k}.
+  \]
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG: ≈ 1.32</li>
+  <li>GER: ≈ 5.36</li>
+  <li>FRA: ≈ 28.87</li>
+  <li>NED: ≈ 49.43</li>
+</ul>
+
+<p>
+  Markets of this type usually have a high margin.  
+  Using a book factor \( B \approx 1.12 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_k = \frac{\text{odd}^{\text{fair}}_k}{B}.
+  \]
+</p>
+
+<p>
+  Final decimal odds:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>England: <strong>1.18</strong></li>
+  <li>Germany: <strong>4.79</strong></li>
+  <li>France: <strong>25.77</strong></li>
+  <li>Netherlands: <strong>44.13</strong></li>
+</ul>
+
+<p>
+  These values match the scoring expectations implied by the markets and the projected goal distribution for each team.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import numpy as np
+import math
+
+# Matches: (home, away, oh, od, oa, line, over, under)
+matches = [
+    ("ENG","FRA",1.36,5.7,7.0, 3.5, 1.83, 1.91),
+    ("GER","NED",2.20,3.9,2.95, 3.5, 2.33, 1.56),
+    ("FRA","GER",2.65,3.45,2.55, 2.5, 1.71, 2.07),
+    ("ENG","NED",1.36,5.10,8.50, 2.5, 2.50, 2.15),
+]
+
+teams = ["ENG","FRA","GER","NED"]
+
+def fair_prob_over(over, under):
+    inv_o, inv_u = 1/over, 1/under
+    s = inv_o + inv_u
+    return inv_o / s
+
+def poisson_cdf(k, lam):
+    return sum(math.exp(-lam)*lam**n/math.factorial(n) for n in range(k+1))
+
+def solve_lambda(line, p_over, guess=3.0):
+    k = int(line - 0.5)
+    target = 1 - p_over
+    lam = guess
+    for _ in range(50):
+        # simple Newton-like update via numeric derivative
+        f = poisson_cdf(k, lam) - target
+        df = (poisson_cdf(k, lam+0.01) - poisson_cdf(k, lam-0.01)) / 0.02
+        lam -= f/df
+        if lam < 0.1:
+            lam = 0.1
+    return lam
+
+def fair_probs_1x2(oh, od, oa):
+    inv = np.array([1/oh,1/od,1/oa])
+    p = inv / inv.sum()
+    return p  # pH, pD, pA
+
+# Expected goals over first two matches
+exp_goals = {t:0.0 for t in teams}
+
+for home,away,oh,od,oa,line,ov,un in matches:
+    p_over = fair_prob_over(ov, un)
+    lam = solve_lambda(line, p_over)
+
+    pH,pD,pA = fair_probs_1x2(oh,od,oa)
+    share_home = pH / (pH + pA)
+    share_away = pA / (pH + pA)
+
+    g_home = lam * share_home
+    g_away = lam * share_away
+
+    exp_goals[home] += g_home
+    exp_goals[away] += g_away
+
+# Scale from 2 games to 3 games
+lam_tot = {t: exp_goals[t] * 1.5 for t in teams}
+
+def simulate_highest(N=200000):
+    counts = {t:0.0 for t in teams}
+    for _ in range(N):
+        goals = {t: np.random.poisson(lam_tot[t]) for t in teams}
+        maxg = max(goals.values())
+        leaders = [t for t,g in goals.items() if g == maxg]
+        for t in leaders:
+            counts[t] += 1/len(leaders)
+    for t in teams:
+        counts[t] /= N
+    return counts
+
+res = simulate_highest()
+
+fair_odds = {t: 1/res[t] for t in teams}
+
+B = 1.12  # ~12% margin
+priced_odds = {t: fair_odds[t]/B for t in teams}
+
+print("Expected goals (3 games):", lam_tot)
+print("Title probabilities:", res)
+print("Fair odds:", fair_odds)
+print("Final odds with margin:", priced_odds)
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 4: Precifique o mercado "Inglaterra para Vencer Todos os Jogos".</h2></div>
+        <div class="lang lang-en"><h2>Question 4: Price the "England To Win All Games" market.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<p>
+  O objetivo é precificar o mercado <strong>England To Win All Games</strong>, que representa a probabilidade de a Inglaterra vencer as três partidas da fase de grupos.
+</p>
+
+<p>
+  As partidas da Inglaterra são:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Rodada 1: ENG vs FRA – odds 1X2: ENG 1.36, Draw 5.70, FRA 7.00</li>
+  <li>Rodada 2: ENG vs NED – odds 1X2: ENG 1.36, Draw 5.10, NED 8.50</li>
+  <li>Rodada 3: ENG vs GER – odds 1X2: ENG 1.47, Draw 4.36, GER 7.05</li>
+</ul>
+
+<p>
+  Para que o evento ocorra, a Inglaterra precisa vencer todos os três jogos.
+</p>
+
+<h3>Probabilidade de vitória da Inglaterra em cada partida</h3>
+
+<p>
+  Para cada mercado 1X2, removemos a margem e obtemos as probabilidades “justas”.  
+  Com odds \( O_H, O_D, O_A \), definimos:
+</p>
+
+<p>
+  \[
+  p_H = 
+  \frac{\frac{1}{O_H}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \qquad
+  p_D = 
+  \frac{\frac{1}{O_D}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \qquad
+  p_A = 
+  \frac{\frac{1}{O_A}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}.
+  \]
+</p>
+
+<p>
+  Aplicando às três partidas:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG vs FRA → \( p_{\text{ENG win}}(1) \approx 0.698 \)</li>
+  <li>ENG vs NED → \( p_{\text{ENG win}}(2) \approx 0.701 \)</li>
+  <li>ENG vs GER → \( p_{\text{ENG win}}(3) \approx 0.647 \)</li>
+</ul>
+
+<p>
+  Os valores refletem a forte superioridade da Inglaterra nas duas primeiras partidas e um desafio um pouco maior na terceira.
+</p>
+
+<h3>Probabilidade de vencer os três jogos</h3>
+
+<p>
+  Considerando independência aproximada entre os resultados, a probabilidade de a Inglaterra vencer todas as partidas é:
+</p>
+
+<p>
+  \[
+  P(\text{ENG 3/3}) =
+  p_{\text{ENG win}}(1) \cdot
+  p_{\text{ENG win}}(2) \cdot
+  p_{\text{ENG win}}(3).
+  \]
+</p>
+
+<p>
+  Substituindo os valores:
+</p>
+
+<p>
+  \[
+  P(\text{ENG 3/3}) 
+  \approx 0.698 \times 0.701 \times 0.647 
+  \approx 0.3165.
+  \]
+</p>
+
+<p>
+  Assim, a probabilidade “justa” é de aproximadamente 31.65%.
+</p>
+
+<h3>Odds justas e odds com margem</h3>
+
+<p>
+  As odds justas (sem margem) são:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}} = \frac{1}{0.3165} \approx 3.16.
+  \]
+</p>
+
+<p>
+  Em mercados especiais como este, operadores costumam aplicar margem adicional.  
+  Supondo um book de \( B \approx 1.07 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}} = 
+  \frac{\text{odd}^{\text{fair}}}{B}
+  \approx 
+  \frac{3.16}{1.07}
+  \approx 2.95.
+  \]
+</p>
+
+<h3>Resultado final – England To Win All Games</h3>
+
+<ul style="margin-left: 20px;">
+  <li><strong>England To Win All Games: 2.95</strong></li>
+</ul>
+
+<p>
+  Essa precificação é consistente com a força implícita da Inglaterra nos mercados 1X2, com a dificuldade natural de vencer três partidas consecutivas e com uma margem moderada aplicada ao mercado.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<p>
+  The goal is to price the <strong>England To Win All Games</strong> market, which measures the probability that England wins all three group matches.
+</p>
+
+<p>
+  England plays:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Round 1: ENG vs FRA – odds 1X2: ENG 1.36, Draw 5.70, FRA 7.00</li>
+  <li>Round 2: ENG vs NED – odds 1X2: ENG 1.36, Draw 5.10, NED 8.50</li>
+  <li>Round 3: ENG vs GER – odds 1X2: ENG 1.47, Draw 4.36, GER 7.05</li>
+</ul>
+
+<p>
+  England must win all three matches for this outcome.
+</p>
+
+<h3>England win probability in each match</h3>
+
+<p>
+  For each 1X2 market, we remove the margin and compute the fair probabilities.  
+  Given odds \( O_H, O_D, O_A \), the normalized probabilities are:
+</p>
+
+<p>
+  \[
+  p_H =
+  \frac{\frac{1}{O_H}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \qquad
+  p_D =
+  \frac{\frac{1}{O_D}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}, \qquad
+  p_A =
+  \frac{\frac{1}{O_A}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}.
+  \]
+</p>
+
+<p>
+  Applying this to the three England matches:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG vs FRA → \( p_{\text{ENG win}}(1) \approx 0.698 \)</li>
+  <li>ENG vs NED → \( p_{\text{ENG win}}(2) \approx 0.701 \)</li>
+  <li>ENG vs GER → \( p_{\text{ENG win}}(3) \approx 0.647 \)</li>
+</ul>
+
+<p>
+  These values show England as a strong favorite in the first two matches and still the favorite in the third.
+</p>
+
+<h3>Probability of winning all three matches</h3>
+
+<p>
+  Assuming the match results are independent, the probability of winning all matches is:
+</p>
+
+<p>
+  \[
+  P(\text{ENG wins all}) =
+  p_{\text{ENG win}}(1)
+  \cdot
+  p_{\text{ENG win}}(2)
+  \cdot
+  p_{\text{ENG win}}(3).
+  \]
+</p>
+
+<p>
+  Substituting the values:
+</p>
+
+<p>
+  \[
+  P(\text{ENG 3/3})
+  \approx
+  0.698 \times 0.701 \times 0.647
+  \approx
+  0.3165.
+  \]
+</p>
+
+<p>
+  The fair probability is therefore about 31.65 percent.
+</p>
+
+<h3>Fair odds and adjusted odds</h3>
+
+<p>
+  The fair odds without margin are:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}} = \frac{1}{0.3165} \approx 3.16.
+  \]
+</p>
+
+<p>
+  Special markets usually include extra margin.  
+  Assuming a book factor of \( B \approx 1.07 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}} =
+  \frac{\text{odd}^{\text{fair}}}{B}
+  \approx
+  \frac{3.16}{1.07}
+  \approx 2.95.
+  \]
+</p>
+
+<h3>Final result – England To Win All Games</h3>
+
+<ul style="margin-left: 20px;">
+  <li><strong>England To Win All Games: 2.95</strong></li>
+</ul>
+
+<p>
+  These odds match England’s strong rating in the 1X2 markets, the natural difficulty of winning three matches in a row and a moderate margin added to the market.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import numpy as np
+
+# Odds 1X2 das três partidas da Inglaterra
+# (home, draw, away)
+eng_matches = [
+    (1.36, 5.70, 7.00),  # ENG vs FRA
+    (1.36, 5.10, 8.50),  # ENG vs NED
+    (1.47, 4.36, 7.05),  # ENG vs GER (preço da R3 já definido)
+]
+
+def fair_probs_1x2(oh, od, oa):
+    inv = np.array([1/oh, 1/od, 1/oa])
+    p = inv / inv.sum()
+    return p  # pH, pD, pA
+
+p_wins = []
+for oh, od, oa in eng_matches:
+    pH, pD, pA = fair_probs_1x2(oh, od, oa)
+    p_wins.append(pH)
+
+p_all = np.prod(p_wins)
+fair_odd = 1 / p_all
+
+print("Win probs per game:", p_wins)
+print("P(ENG wins all 3):", p_all)
+print("Fair odds:", fair_odd)
+
+# Aplicando margem de 7%
+book = 1.07
+priced_odd = fair_odd / book
+print("Priced odds (with 7% margin):", priced_odd)
+
+</code></pre>
+      </div>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 5: Precifique o Total de Gols do Torneio para a Inglaterra.</h2></div>
+        <div class="lang lang-en"><h2>Question 5: Price the Tournament Goal Total for England.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<p>
+  O objetivo é precificar o mercado <strong>Tournament Goal Total for England</strong>, que representa o total de gols marcados pela Inglaterra ao longo de seus três jogos no torneio.
+</p>
+
+<p>
+  Como o mercado normalmente é oferecido em formato Over/Under em torno da média esperada, seguimos os passos:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Estimar a expectativa de gols da Inglaterra nos três jogos.</li>
+  <li>Modelar o total de gols como uma Poisson.</li>
+  <li>Escolher uma linha natural próxima da média (7.5 gols).</li>
+  <li>Precificar Over 7.5 e Under 7.5 em odds decimais.</li>
+</ul>
+
+<h3>Expectativa de gols da Inglaterra</h3>
+
+<p>
+  Usamos dois tipos de mercado:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Mercados de totais para estimar \( \lambda_{\text{total}} \) de cada partida.</li>
+  <li>Mercados 1X2 para dividir os gols esperados entre as equipes com base no favoritismo.</li>
+</ul>
+
+<h3>Totais esperados por partida</h3>
+
+<p>
+  Para cada jogo com linha \( L \) e odds \( (O_{\text{over}}, O_{\text{under}}) \), removemos a margem e obtemos \( p_{\text{over}} \).  
+  Assumimos:
+</p>
+
+<p>
+  \[
+  P(G \ge 4) = p_{\text{over}} \quad \text{(linha 3.5)},
+  \qquad
+  P(G \ge 3) = p_{\text{over}} \quad \text{(linha 2.5)}.
+  \]
+</p>
+
+<p>
+  Com \( G \sim \text{Poisson}(\lambda) \):
+</p>
+
+<p>
+  \[
+  P(G \ge 4)
+  =
+  1 - \sum_{n=0}^{3} e^{-\lambda} \frac{\lambda^n}{n!}
+  =
+  p_{\text{over}}.
+  \]
+</p>
+
+<p>
+  Resolvemos numericamente para \( \lambda \).  
+  Aplicando aos jogos:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG–FRA → \( \lambda \approx 3.72 \)</li>
+  <li>GER–NED → \( \lambda \approx 3.22 \)</li>
+  <li>FRA–GER → \( \lambda \approx 2.87 \)</li>
+  <li>ENG–NED → \( \lambda \approx 2.52 \)</li>
+</ul>
+
+<h3>Alocação dos gols entre as equipes</h3>
+
+<p>
+  Convertendo odds 1X2 em probabilidades justas \( (p_H, p_D, p_A) \):
+</p>
+
+<p>
+  \[
+  p_H = \frac{\frac{1}{O_H}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}},
+  \quad
+  p_A = \frac{\frac{1}{O_A}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}.
+  \]
+</p>
+
+<p>
+  A fração de gols esperados fica:
+</p>
+
+<p>
+  \[
+  s_H = \frac{p_H}{p_H + p_A},
+  \qquad
+  s_A = \frac{p_A}{p_H + p_A}.
+  \]
+</p>
+
+<p>
+  E os gols esperados:
+</p>
+
+<p>
+  \[
+  E[\text{gols}_H] = \lambda \cdot s_H,
+  \qquad
+  E[\text{gols}_A] = \lambda \cdot s_A.
+  \]
+</p>
+
+<p>
+  Somando a contribuição da Inglaterra nos dois jogos em que aparece:
+</p>
+
+<p>
+  \[
+  E[\text{gols da Inglaterra em 2 jogos}] \approx 5.29.
+  \]
+</p>
+
+<p>
+  Extrapolando para três partidas:
+</p>
+
+<p>
+  \[
+  \lambda_{\text{ENG}} \approx 5.29 \times \frac{3}{2} \approx 7.94.
+  \]
+</p>
+
+<h3>Modelagem do total de gols da Inglaterra</h3>
+
+<p>
+  Modelamos:
+</p>
+
+<p>
+  \[
+  G_{\text{ENG}} \sim \text{Poisson}(\lambda_{\text{ENG}}),
+  \qquad
+  \lambda_{\text{ENG}} \approx 7.94.
+  \]
+</p>
+
+<p>
+  Linha natural de mercado:
+</p>
+
+<p>
+  <strong>Tournament Goal Total – England Over/Under 7.5</strong>
+</p>
+
+<p>
+  Definições:
+</p>
+
+<p>
+  \[
+  P(G_{\text{ENG}} \ge 8), \qquad
+  P(G_{\text{ENG}} \le 7).
+  \]
+</p>
+
+<p>
+  Com Poisson:
+</p>
+
+<p>
+  \[
+  P(G_{\text{ENG}} \le 7)
+  =
+  \sum_{n=0}^{7} e^{-\lambda_{\text{ENG}}} \frac{\lambda_{\text{ENG}}^n}{n!},
+  \qquad
+  P(G_{\text{ENG}} \ge 8)
+  =
+  1 - P(G_{\text{ENG}} \le 7).
+  \]
+</p>
+
+<p>
+  Com \( \lambda_{\text{ENG}} \approx 7.94 \):
+</p>
+
+<p>
+  \[
+  P(G_{\text{ENG}} \ge 8) \approx 0.539,
+  \qquad
+  P(G_{\text{ENG}} \le 7) \approx 0.461.
+  \]
+</p>
+
+<h3>Odds justas e margem</h3>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Over}} = \frac{1}{0.539} \approx 1.86,
+  \qquad
+  \text{odd}^{\text{fair}}_{\text{Under}} = \frac{1}{0.461} \approx 2.17.
+  \]
+</p>
+
+<p>
+  Com fator de book \( B \approx 1.06 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}} = \frac{\text{odd}^{\text{fair}}}{B}.
+  \]
+</p>
+
+<p>
+  Resultados:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>England Over 7.5: <strong>1.75</strong></li>
+  <li>England Under 7.5: <strong>2.05</strong></li>
+</ul>
+
+<p>
+  Esses preços são consistentes com a expectativa de gols implícita nos mercados e com uma linha natural de props de torneio.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<p>
+  The goal is to price the <strong>Tournament Goal Total for England</strong> market, which represents the total number of goals scored by England across the three matches of the tournament.
+</p>
+
+<p>
+  This type of market is usually offered as an Over/Under line close to the expected value. We follow these steps:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Estimate England’s expected goals across the three matches.</li>
+  <li>Model the total number of goals with a Poisson distribution.</li>
+  <li>Choose a natural line close to the mean value (7.5 goals).</li>
+  <li>Price Over 7.5 and Under 7.5 in decimal odds.</li>
+</ul>
+
+<h3>Expected goals for England</h3>
+
+<p>
+  We use two market types:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Totals markets to estimate the total \( \lambda_{\text{total}} \) for each match.</li>
+  <li>1X2 markets to split those goals between teams based on win probability.</li>
+</ul>
+
+<h3>Expected totals per match</h3>
+
+<p>
+  For each match with line \( L \) and odds \( (O_{\text{over}}, O_{\text{under}}) \), we remove the margin and obtain \( p_{\text{over}} \). We assume:
+</p>
+
+<p>
+  \[
+  P(G \ge 4) = p_{\text{over}} \quad \text{(line 3.5)},
+  \qquad
+  P(G \ge 3) = p_{\text{over}} \quad \text{(line 2.5)}.
+  \]
+</p>
+
+<p>
+  With \( G \sim \text{Poisson}(\lambda) \):
+</p>
+
+<p>
+  \[
+  P(G \ge 4)
+  =
+  1 - \sum_{n=0}^{3} e^{-\lambda} \frac{\lambda^n}{n!}
+  =
+  p_{\text{over}}.
+  \]
+</p>
+
+<p>
+  Solving for \( \lambda \), we obtain:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>ENG–FRA → \( \lambda \approx 3.72 \)</li>
+  <li>GER–NED → \( \lambda \approx 3.22 \)</li>
+  <li>FRA–GER → \( \lambda \approx 2.87 \)</li>
+  <li>ENG–NED → \( \lambda \approx 2.52 \)</li>
+</ul>
+
+<h3>Splitting expected goals between teams</h3>
+
+<p>
+  From 1X2 odds we compute fair probabilities \( (p_H, p_D, p_A) \):
+</p>
+
+<p>
+  \[
+  p_H =
+  \frac{\frac{1}{O_H}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}},
+  \quad
+  p_A =
+  \frac{\frac{1}{O_A}}
+  {\frac{1}{O_H} + \frac{1}{O_D} + \frac{1}{O_A}}.
+  \]
+</p>
+
+<p>
+  Goal shares:
+</p>
+
+<p>
+  \[
+  s_H = \frac{p_H}{p_H + p_A},
+  \qquad
+  s_A = \frac{p_A}{p_H + p_A}.
+  \]
+</p>
+
+<p>
+  Expected goals:
+</p>
+
+<p>
+  \[
+  E[\text{goals}_H] = \lambda \cdot s_H,
+  \qquad
+  E[\text{goals}_A] = \lambda \cdot s_A.
+  \]
+</p>
+
+<p>
+  Summing England’s contributions in its two matches:
+</p>
+
+<p>
+  \[
+  E[\text{England goals in 2 matches}] \approx 5.29.
+  \]
+</p>
+
+<p>
+  Scaling to three matches:
+</p>
+
+<p>
+  \[
+  \lambda_{\text{ENG}} \approx 5.29 \times \frac{3}{2} \approx 7.94.
+  \]
+</p>
+
+<h3>Modeling England’s tournament goal total</h3>
+
+<p>
+  We model:
+</p>
+
+<p>
+  \[
+  G_{\text{ENG}} \sim \text{Poisson}(\lambda_{\text{ENG}}),
+  \qquad
+  \lambda_{\text{ENG}} \approx 7.94.
+  \]
+</p>
+
+<p>
+  Natural market line:
+</p>
+
+<p>
+  <strong>England Tournament Goal Total – Over/Under 7.5</strong>
+</p>
+
+<p>
+  Definitions:
+</p>
+
+<p>
+  \[
+  P(G_{\text{ENG}} \ge 8),
+  \qquad
+  P(G_{\text{ENG}} \le 7).
+  \]
+</p>
+
+<p>
+  With Poisson:
+</p>
+
+<p>
+  \[
+  P(G_{\text{ENG}} \le 7)
+  =
+  \sum_{n=0}^{7} e^{-\lambda_{\text{ENG}}} \frac{\lambda_{\text{ENG}}^n}{n!},
+  \qquad
+  P(G_{\text{ENG}} \ge 8)
+  =
+  1 - P(G_{\text{ENG}} \le 7).
+  \]
+</p>
+
+<p>
+  For \( \lambda_{\text{ENG}} \approx 7.94 \):
+</p>
+
+<p>
+  \[
+  P(G_{\text{ENG}} \ge 8) \approx 0.539,
+  \qquad
+  P(G_{\text{ENG}} \le 7) \approx 0.461.
+  \]
+</p>
+
+<h3>Fair odds and margin</h3>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Over}} = \frac{1}{0.539} \approx 1.86,
+  \qquad
+  \text{odd}^{\text{fair}}_{\text{Under}} = \frac{1}{0.461} \approx 2.17.
+  \]
+</p>
+
+<p>
+  With book factor \( B \approx 1.06 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}} = \frac{\text{odd}^{\text{fair}}}{B}.
+  \]
+</p>
+
+<p>
+  Final odds:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>England Over 7.5: <strong>1.75</strong></li>
+  <li>England Under 7.5: <strong>2.05</strong></li>
+</ul>
+
+<p>
+  These prices align with the expected scoring level implied by the markets and with a natural tournament totals line.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import numpy as np
+import math
+
+# Matches: (home, away, oh, od, oa, line, over, under)
+matches = [
+    ("ENG","FRA",1.36,5.7,7.0, 3.5, 1.83, 1.91),
+    ("GER","NED",2.20,3.9,2.95, 3.5, 2.33, 1.56),
+    ("FRA","GER",2.65,3.45,2.55, 2.5, 1.71, 2.07),
+    ("ENG","NED",1.36,5.10,8.50, 2.5, 2.50, 2.15),
+]
+
+teams = ["ENG","FRA","GER","NED"]
+
+def fair_prob_over(over, under):
+    inv_o, inv_u = 1/over, 1/under
+    s = inv_o + inv_u
+    return inv_o / s
+
+def poisson_cdf(k, lam):
+    return sum(math.exp(-lam)*lam**n/math.factorial(n) for n in range(k+1))
+
+def solve_lambda(line, p_over, guess=3.0):
+    k = int(line - 0.5)
+    lam = guess
+    for _ in range(50):
+        # f(lam) = P(G >= threshold) - p_over
+        cdf = poisson_cdf(k, lam)
+        f = (1 - cdf) - p_over
+        df = ((1 - poisson_cdf(k, lam+0.01)) - (1 - poisson_cdf(k, lam-0.01))) / 0.02
+        lam -= f/df
+        if lam < 0.1:
+            lam = 0.1
+    return lam
+
+def fair_probs_1x2(oh, od, oa):
+    inv = np.array([1/oh,1/od,1/oa])
+    p = inv / inv.sum()
+    return p  # pH, pD, pA
+
+# Expected goals over first 2 games for ENG
+exp_goals = {t:0.0 for t in teams}
+
+for home,away,oh,od,oa,line,ov,un in matches:
+    p_over = fair_prob_over(ov, un)
+    lam = solve_lambda(line, p_over)
+
+    pH,pD,pA = fair_probs_1x2(oh,od,oa)
+    share_home = pH / (pH + pA)
+    share_away = pA / (pH + pA)
+
+    g_home = lam * share_home
+    g_away = lam * share_away
+
+    exp_goals[home] += g_home
+    exp_goals[away] += g_away
+
+lam_eng = exp_goals["ENG"] * 1.5  # scale from 2 to 3 matches
+
+print("Lambda England (3 games):", lam_eng)
+
+# Poisson prob for Over/Under 7.5
+def p_over_75(lam):
+    # P(G >= 8)
+    return 1 - poisson_cdf(7, lam)
+
+def p_under_75(lam):
+    # P(G <= 7)
+    return poisson_cdf(7, lam)
+
+pO = p_over_75(lam_eng)
+pU = p_under_75(lam_eng)
+
+print("P(Over 7.5):", pO)
+print("P(Under 7.5):", pU)
+
+fair_over = 1 / pO
+fair_under = 1 / pU
+
+print("Fair odds Over 7.5:", fair_over)
+print("Fair odds Under 7.5:", fair_under)
+
+book = 1.06
+priced_over = fair_over / book
+priced_under = fair_under / book
+
+print("Priced Over 7.5:", priced_over)
+print("Priced Under 7.5:", priced_under)
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 6: Precifique o Total de Defesas do torneio.</h2></div>
+        <div class="lang lang-en"><h2>Question 6: Price the Total Saves in the Tournament.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<h3>Total Saves in the Tournament – Precificação em Odds Decimais</h3>
+
+<h3>1. Objetivo</h3>
+
+<p>
+  Queremos precificar o mercado <strong>Total Saves in the Tournament</strong>, que representa o número total de defesas de goleiros ao longo dos seis jogos do torneio entre Inglaterra, França, Alemanha e Holanda.
+</p>
+
+<p>
+  Como não existe um mercado explícito para saves, o modelo é construído a partir de:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>expectativa de gols no torneio,</li>
+  <li>relação entre gols e finalizações no alvo,</li>
+  <li>conversão de finalizações no alvo em defesas.</li>
+</ul>
+
+<h3>2. Expectativa de gols no torneio</h3>
+
+<p>
+  A partir do modelo anterior, o total esperado de gols por equipe em três partidas é:
+</p>
+
+<p>
+  \[
+  \lambda_{\text{ENG}} \approx 7.94,\quad
+  \lambda_{\text{GER}} \approx 4.96,\quad
+  \lambda_{\text{FRA}} \approx 3.02,\quad
+  \lambda_{\text{NED}} \approx 2.58.
+  \]
+</p>
+
+<p>
+  O total esperado de gols no torneio (seis partidas) é:
+</p>
+
+<p>
+  \[
+  \lambda_{\text{gols tot}}
+  = 7.94 + 4.96 + 3.02 + 2.58
+  \approx 18.5.
+  \]
+</p>
+
+<p>
+  Portanto, o modelo implica cerca de <strong>18,5 gols</strong> no torneio.
+</p>
+
+<h3>3. De gols para saves</h3>
+
+<p>
+  Para transformar gols em saves, usamos a taxa média de conversão de finalizações no alvo.
+</p>
+
+<p>
+  Define-se \( c = 0.32 \) como a taxa média de um shot on target se tornar gol.
+</p>
+
+<p>
+  Em valor esperado:
+</p>
+
+<p>
+  \[
+  \mathbb{E}[G_{\text{tot}}] = 18.5,
+  \qquad
+  \mathbb{E}[SOT_{\text{tot}}] \approx \frac{18.5}{0.32} \approx 57.8.
+  \]
+</p>
+
+<p>
+  Como cada gol é um shot on target convertido:
+</p>
+
+<p>
+  \[
+  \mathbb{E}[SAV_{\text{tot}}]
+  = \mathbb{E}[SOT_{\text{tot}}] - \mathbb{E}[G_{\text{tot}}]
+  = 18.5\left(\frac{1}{0.32} - 1\right)
+  \approx 39.31.
+  \]
+</p>
+
+<p>
+  O modelo implica cerca de <strong>39,3 saves</strong> ao longo do torneio.
+</p>
+
+<h3>4. Distribuição e escolha da linha</h3>
+
+<p>
+  Modelamos o total de saves como:
+</p>
+
+<p>
+  \[
+  T_{\text{saves}} \sim \text{Poisson}(\mu),
+  \qquad
+  \mu \approx 39.31.
+  \]
+</p>
+
+<p>
+  Uma linha natural de mercado é:
+</p>
+
+<p>
+  <strong>Total Saves in the Tournament – Over/Under 38.5</strong>
+</p>
+
+<p>
+  Assim:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Over 38.5 ⇔ \( T_{\text{saves}} \ge 39 \)</li>
+  <li>Under 38.5 ⇔ \( T_{\text{saves}} \le 38 \)</li>
+</ul>
+
+<p>
+  Para Poisson:
+</p>
+
+<p>
+  \[
+  P(T_{\text{saves}} \le 38)
+  = \sum_{n=0}^{38} e^{-\mu}\frac{\mu^n}{n!},
+  \qquad
+  P(T_{\text{saves}} \ge 39)
+  = 1 - P(T_{\text{saves}} \le 38).
+  \]
+</p>
+
+<p>
+  Com \( \mu \approx 39.31 \):
+</p>
+
+<p>
+  \[
+  P(T_{\text{saves}} \ge 39) \approx 0.541,
+  \qquad
+  P(T_{\text{saves}} \le 38) \approx 0.459.
+  \]
+</p>
+
+<h3>5. Odds justas e margem</h3>
+
+<p>
+  As odds justas são:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Over}} = \frac{1}{0.541} \approx 1.85,
+  \qquad
+  \text{odd}^{\text{fair}}_{\text{Under}} = \frac{1}{0.459} \approx 2.18.
+  \]
+</p>
+
+<p>
+  Para este tipo de mercado, uma margem de 6% é razoável:
+</p>
+
+<p>
+  \[
+  B \approx 1.06.
+  \]
+</p>
+
+<p>
+  Odds finais:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_{\text{Over}}
+  = \frac{1.85}{1.06}
+  \approx 1.74,
+  \qquad
+  \text{odd}^{\text{final}}_{\text{Under}}
+  = \frac{2.18}{1.06}
+  \approx 2.06.
+  \]
+</p>
+
+<h3>Resultado final – Total Saves in the Tournament</h3>
+
+<ul style="margin-left: 20px;">
+  <li><strong>Over 38.5: 1.74</strong></li>
+  <li><strong>Under 38.5: 2.06</strong></li>
+</ul>
+
+<p>
+  As odds são consistentes com a expectativa de saves, com a taxa média gol/SOT e com uma margem realista para mercados especiais.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<h3>Total Saves in the Tournament – Decimal Odds Pricing</h3>
+
+<h3>1. Objective</h3>
+
+<p>
+  The goal is to price the <strong>Total Saves in the Tournament</strong> market, which represents the total number of goalkeeper saves across the six matches involving England, France, Germany and Netherlands.
+</p>
+
+<p>
+  Since there is no direct saves market, the model uses:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>expected goals in the tournament,</li>
+  <li>the relation between goals and shots on target,</li>
+  <li>conversion of shots on target into saves.</li>
+</ul>
+
+<h3>2. Expected goals in the tournament</h3>
+
+<p>
+  From the previous model, the expected goals for each team in three matches are:
+</p>
+
+<p>
+  \[
+  \lambda_{\text{ENG}} \approx 7.94,\quad
+  \lambda_{\text{GER}} \approx 4.96,\quad
+  \lambda_{\text{FRA}} \approx 3.02,\quad
+  \lambda_{\text{NED}} \approx 2.58.
+  \]
+</p>
+
+<p>
+  The total goal expectation for the six matches is:
+</p>
+
+<p>
+  \[
+  \lambda_{\text{goals tot}}
+  = 7.94 + 4.96 + 3.02 + 2.58
+  \approx 18.5.
+  \]
+</p>
+
+<p>
+  This implies about <strong>18.5 goals</strong> expected in the tournament.
+</p>
+
+<h3>3. From goals to saves</h3>
+
+<p>
+  To move from goals to saves, we use the average conversion from shots on target to goals.
+</p>
+
+<p>
+  We adopt \( c = 0.32 \) as the probability that a shot on target becomes a goal.
+</p>
+
+<p>
+  Expected values:
+</p>
+
+<p>
+  \[
+  \mathbb{E}[G_{\text{tot}}] = 18.5,
+  \qquad
+  \mathbb{E}[SOT_{\text{tot}}]
+  \approx \frac{18.5}{0.32}
+  \approx 57.8.
+  \]
+</p>
+
+<p>
+  Since every goal is a converted shot on target:
+</p>
+
+<p>
+  \[
+  \mathbb{E}[SAV_{\text{tot}}]
+  = \mathbb{E}[SOT_{\text{tot}}] - \mathbb{E}[G_{\text{tot}}]
+  = 18.5\left(\frac{1}{0.32} - 1\right)
+  \approx 39.31.
+  \]
+</p>
+
+<p>
+  The model implies about <strong>39.3 saves</strong> in the tournament.
+</p>
+
+<h3>4. Distribution and market line</h3>
+
+<p>
+  We model the total number of saves as:
+</p>
+
+<p>
+  \[
+  T_{\text{saves}} \sim \text{Poisson}(\mu),
+  \qquad
+  \mu \approx 39.31.
+  \]
+</p>
+
+<p>
+  A natural market line is:
+</p>
+
+<p>
+  <strong>Total Saves in the Tournament – Over/Under 38.5</strong>
+</p>
+
+<p>
+  With:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Over 38.5 ⇔ \( T_{\text{saves}} \ge 39 \)</li>
+  <li>Under 38.5 ⇔ \( T_{\text{saves}} \le 38 \)</li>
+</ul>
+
+<p>
+  Poisson probabilities:
+</p>
+
+<p>
+  \[
+  P(T_{\text{saves}} \le 38)
+  = \sum_{n=0}^{38} e^{-\mu}\frac{\mu^n}{n!},
+  \qquad
+  P(T_{\text{saves}} \ge 39)
+  = 1 - P(T_{\text{saves}} \le 38).
+  \]
+</p>
+
+<p>
+  With \( \mu \approx 39.31 \):
+</p>
+
+<p>
+  \[
+  P(T_{\text{saves}} \ge 39) \approx 0.541,
+  \qquad
+  P(T_{\text{saves}} \le 38) \approx 0.459.
+  \]
+</p>
+
+<h3>5. Fair odds and margin</h3>
+
+<p>
+  Fair odds:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Over}} = \frac{1}{0.541} \approx 1.85,
+  \qquad
+  \text{odd}^{\text{fair}}_{\text{Under}} = \frac{1}{0.459} \approx 2.18.
+  \]
+</p>
+
+<p>
+  A reasonable tournament market margin is about 6 percent.  
+  With book factor \( B \approx 1.06 \):
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_{\text{Over}}
+  = \frac{1.85}{1.06}
+  \approx 1.74,
+  \qquad
+  \text{odd}^{\text{final}}_{\text{Under}}
+  = \frac{2.18}{1.06}
+  \approx 2.06.
+  \]
+</p>
+
+<h3>Final result – Total Saves in the Tournament</h3>
+
+<ul style="margin-left: 20px;">
+  <li><strong>Over 38.5: 1.74</strong></li>
+  <li><strong>Under 38.5: 2.06</strong></li>
+</ul>
+
+<p>
+  These odds match the expected number of saves, the goal-to-shot conversion rate and a realistic margin for a special tournament market.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import math
+
+# -------------------------------------------
+# 1) Expected goals per team in the tournament (3 games)
+#    These come from the previous modelling steps.
+# -------------------------------------------
+lam_eng = 7.94
+lam_ger = 4.96
+lam_fra = 3.02
+lam_ned = 2.58
+
+lam_goals_total = lam_eng + lam_ger + lam_fra + lam_ned
+print("Expected total goals in tournament:", lam_goals_total)
+
+# -------------------------------------------
+# 2) From goals to saves
+#    c = conversion rate of shots on target into goals
+# -------------------------------------------
+c = 0.32  # ~32% of shots on target become goals (typical top-level football)
+
+mu_saves = lam_goals_total * ((1 / c) - 1)
+print("Expected total saves (mu):", mu_saves)
+
+# -------------------------------------------
+# 3) Poisson CDF helper
+# -------------------------------------------
+def poisson_cdf(k: int, lam: float) -> float:
+    """P(X <= k) for X ~ Poisson(lam)"""
+    s = 0.0
+    for n in range(0, k + 1):
+        s += math.exp(-lam) * lam**n / math.factorial(n)
+    return s
+
+# Line: 38.5 saves
+# Over 38.5 -> X >= 39
+# Under 38.5 -> X <= 38
+p_under = poisson_cdf(38, mu_saves)
+p_over = 1 - p_under
+
+print("P(Over 38.5):", p_over)
+print("P(Under 38.5):", p_under)
+
+# -------------------------------------------
+# 4) Fair odds
+# -------------------------------------------
+fair_over = 1 / p_over
+fair_under = 1 / p_under
+
+print("Fair odds Over 38.5:", fair_over)
+print("Fair odds Under 38.5:", fair_under)
+
+# -------------------------------------------
+# 5) Apply margin (e.g. 6% overround for this special market)
+# -------------------------------------------
+book = 1.06
+priced_over = fair_over / book
+priced_under = fair_under / book
+
+print("Priced odds Over 38.5:", priced_over)
+print("Priced odds Under 38.5:", priced_under)
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="page-navigation">
+      <div class="nav-bottom">
+        <a class="btn btn-gold light" href="s2_1.html">
+          <span class="lang lang-pt">Anterior: S2 Modelling 1</span>
+          <span class="lang lang-en">Previous: S2 Modelling 1</span>
+        </a>
+        <a class="btn btn-gold" href="s2_3.html">
+          <span class="lang lang-pt">Próximo: S2 Modelling 3</span>
+          <span class="lang lang-en">Next: S2 Modelling 3</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+</body>
+</html>

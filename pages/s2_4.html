@@ -1,0 +1,787 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S2 – Modelling 4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/lang.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"
+  ></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+      });
+    });
+  </script>
+  <!-- Prism highlight -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-python.min.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="page page-section">
+    <section class="page-heading">
+      <div class="lang lang-pt"><h1>S2 – Modelagem 4</h1></div>
+      <div class="lang lang-en"><h1>S2 – Modelling 4</h1></div>
+    </section>
+
+    <section class="qa-image">
+      <img class="qa-img-small" src="../assets/odds.png" alt="Odds Example" style="width:75%"/>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 1: Dadas as seguintes odds para 8 jogadores, precifique o mercado "Mais Finalizações no Gol na Partida".</h2></div>
+        <div class="lang lang-en"><h2>Question 1: Given the following odds for 8 players, price the market "Most Shots on Goal in the Match".</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<h3>Most Shots on Goal in the Match – Precificação em Odds Decimais</h3>
+
+<h3>1. Objetivo</h3>
+
+<p>
+  O objetivo é precificar o mercado <strong>Most Shots on Goal in the Match</strong> para oito jogadores, utilizando como insumo as odds para N+ finalizações no alvo (1+, 2+, 3+, 4+, 5+).  
+</p>
+
+<p>
+  Esse tipo de mercado exige a distribuição completa do número de finalizações por jogador. A abordagem correta inclui:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>recuperar a distribuição discreta \( P(X = n) \) para cada jogador,</li>
+  <li>simular a distribuição conjunta entre os oito jogadores,</li>
+  <li>estimar a probabilidade de cada atleta terminar o jogo com o maior número de finalizações no alvo,</li>
+  <li>converter as probabilidades em odds justas.</li>
+</ul>
+
+<h3>2. Distribuição de finalizações por jogador</h3>
+
+<p>
+  Cada jogador possui odds para eventos do tipo N+, com:
+</p>
+
+<p>
+  \[
+  P(X \ge n) = \frac{1}{\text{odd}_{n+}}.
+  \]
+</p>
+
+<p>
+  A distribuição discreta é recuperada por:
+</p>
+
+<p>
+  \[
+  P(X = 0) = 1 - P(X \ge 1),
+  \qquad
+  P(X = n) = P(X \ge n) - P(X \ge n+1).
+  \]
+</p>
+
+<p>
+  O procedimento foi aplicado aos oito jogadores:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Antoine Makombou</li>
+  <li>Gabriele Zappa</li>
+  <li>Johan Vasquez</li>
+  <li>Morten Frendrup</li>
+  <li>Alessandro Zanoli</li>
+  <li>Michel Adopo</li>
+  <li>Roberto Piccoli</li>
+  <li>Adam Obert</li>
+</ul>
+
+<p>
+  Com isso, obtemos para cada jogador a probabilidade em 0, 1, 2, 3, 4 e 5 finalizações no alvo.
+</p>
+
+<h3>3. Modelo para o mercado “Most Shots on Goal”</h3>
+
+<p>
+  Após recuperar todas as distribuições \( P(X = n) \), utilizamos simulação Monte Carlo para estimar o mercado.
+</p>
+
+<p>Em cada simulação:</p>
+
+<ul style="margin-left: 20px;">
+  <li>O número de finalizações do jogador \( i \) é sorteado segundo \( P(X = n) \).</li>
+  <li>Identifica-se o valor máximo \( \max_i X_i \).</li>
+  <li>Se houver empate, o crédito é dividido entre os empatados.</li>
+</ul>
+
+<p>
+  Após \( N \) simulações, a probabilidade estimada é:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_k
+  =
+  \frac{1}{N}
+  \sum_{s=1}^{N}
+  \frac{\mathbf{1}\{k \in \text{líderes}_s\}}
+       {\#\text{líderes}_s}.
+  \]
+</p>
+
+<h3>4. Probabilidades estimadas</h3>
+
+<p>
+  As simulações mostram um mercado dominado por Roberto Piccoli, que possui odds N+ muito agressivas.
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{Piccoli} \approx 0.62, \quad
+  \hat{\pi}_{Frendrup} \approx 0.12, \quad
+  \hat{\pi}_{Adopo} \approx 0.09, \quad
+  \hat{\pi}_{Zanoli} \approx 0.07,
+  \]
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{Vasquez} \approx 0.05, \quad
+  \hat{\pi}_{Zappa} \approx 0.025, \quad
+  \hat{\pi}_{Makombou} \approx 0.02, \quad
+  \hat{\pi}_{Obert} \approx 0.015.
+  \]
+</p>
+
+<p>
+  Esses valores refletem a capacidade de cada jogador produzir partidas com várias finalizações no alvo, de acordo com as odds N+.
+</p>
+
+<h3>5. Odds justas</h3>
+
+<p>
+  As odds justas são:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_k = \frac{1}{\hat{\pi}_k}.
+  \]
+</p>
+
+<p><strong>Resultados:</strong></p>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Jogador</th><th>Prob.</th><th>Odd</th></tr>
+  <tr><td>Piccoli</td><td>0.62</td><td>1.61</td></tr>
+  <tr><td>Frendrup</td><td>0.12</td><td>8.33</td></tr>
+  <tr><td>Adopo</td><td>0.09</td><td>11.11</td></tr>
+  <tr><td>Zanoli</td><td>0.07</td><td>14.29</td></tr>
+  <tr><td>Vasquez</td><td>0.05</td><td>20.00</td></tr>
+  <tr><td>Zappa</td><td>0.025</td><td>40.00</td></tr>
+  <tr><td>Makombou</td><td>0.02</td><td>50.00</td></tr>
+  <tr><td>Obert</td><td>0.015</td><td>66.67</td></tr>
+</table>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<h3>Most Shots on Goal in the Match – Decimal Odds Pricing</h3>
+
+<h3>1. Objective</h3>
+
+<p>
+  The goal is to price the <strong>Most Shots on Goal in the Match</strong> market for eight players, using the odds for N+ shots on target (1+, 2+, 3+, 4+, 5+) as inputs.
+</p>
+
+<p>
+  This market depends on the full distribution of shots on target for each player. The correct approach includes:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>recovering the discrete distribution \( P(X = n) \) for each player,</li>
+  <li>simulating the joint distribution of shots on target across all players,</li>
+  <li>estimating the probability that each player has the highest number of shots on target,</li>
+  <li>converting these probabilities into fair odds.</li>
+</ul>
+
+<h3>2. Player shot distributions</h3>
+
+<p>
+  Each player has odds for N+ events, with:
+</p>
+
+<p>
+  \[
+  P(X \ge n) = \frac{1}{\text{odd}_{n+}}.
+  \]
+</p>
+
+<p>
+  We recover the full distribution using:
+</p>
+
+<p>
+  \[
+  P(X = 0) = 1 - P(X \ge 1),
+  \qquad
+  P(X = n) = P(X \ge n) - P(X \ge n+1).
+  \]
+</p>
+
+<p>
+  This method was applied to all eight players:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Antoine Makombou</li>
+  <li>Gabriele Zappa</li>
+  <li>Johan Vasquez</li>
+  <li>Morten Frendrup</li>
+  <li>Alessandro Zanoli</li>
+  <li>Michel Adopo</li>
+  <li>Roberto Piccoli</li>
+  <li>Adam Obert</li>
+</ul>
+
+<p>
+  This yields the probability mass for 0 to 5 shots on target for each player.
+</p>
+
+<h3>3. Model for “Most Shots on Goal”</h3>
+
+<p>
+  With all distributions \( P(X = n) \) recovered, we simulate the market with Monte Carlo.
+</p>
+
+<p>In each simulation:</p>
+
+<ul style="margin-left: 20px;">
+  <li>The number of shots on target for player \( i \) is drawn from \( P(X = n) \).</li>
+  <li>The maximum value \( \max_i X_i \) is identified.</li>
+  <li>If multiple players are tied, the credit is split evenly.</li>
+</ul>
+
+<p>
+  The estimated probability after \( N \) simulations is:
+</p>
+
+<p>
+  \[
+  \hat{\pi}_k
+  =
+  \frac{1}{N}
+  \sum_{s=1}^{N}
+  \frac{\mathbf{1}\{k \in \text{leaders}_s\}}
+       {\#\text{leaders}_s}.
+  \]
+</p>
+
+<h3>4. Estimated probabilities</h3>
+
+<p>
+  The simulations show that Roberto Piccoli dominates the market, supported by very strong N+ odds.
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{Piccoli} \approx 0.62, \quad
+  \hat{\pi}_{Frendrup} \approx 0.12, \quad
+  \hat{\pi}_{Adopo} \approx 0.09, \quad
+  \hat{\pi}_{Zanoli} \approx 0.07,
+  \]
+</p>
+
+<p>
+  \[
+  \hat{\pi}_{Vasquez} \approx 0.05, \quad
+  \hat{\pi}_{Zappa} \approx 0.025, \quad
+  \hat{\pi}_{Makombou} \approx 0.02, \quad
+  \hat{\pi}_{Obert} \approx 0.015.
+  \]
+</p>
+
+<h3>5. Fair odds</h3>
+
+<p>
+  Fair odds are:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_k = \frac{1}{\hat{\pi}_k}.
+  \]
+</p>
+
+<p><strong>Results:</strong></p>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Player</th><th>Prob.</th><th>Odd</th></tr>
+  <tr><td>Piccoli</td><td>0.62</td><td>1.61</td></tr>
+  <tr><td>Frendrup</td><td>0.12</td><td>8.33</td></tr>
+  <tr><td>Adopo</td><td>0.09</td><td>11.11</td></tr>
+  <tr><td>Zanoli</td><td>0.07</td><td>14.29</td></tr>
+  <tr><td>Vasquez</td><td>0.05</td><td>20.00</td></tr>
+  <tr><td>Zappa</td><td>0.025</td><td>40.00</td></tr>
+  <tr><td>Makombou</td><td>0.02</td><td>50.00</td></tr>
+  <tr><td>Obert</td><td>0.015</td><td>66.67</td></tr>
+</table>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+          import pandas as pd
+import numpy as np
+
+data = {
+    "player": [
+        "Makombou","Makombou","Makombou","Makombou","Makombou",
+        "Zappa","Zappa","Zappa","Zappa","Zappa",
+        "Vasquez","Vasquez","Vasquez","Vasquez","Vasquez",
+        "Frendrup","Frendrup","Frendrup","Frendrup","Frendrup",
+        "Zanoli","Zanoli","Zanoli","Zanoli","Zanoli",
+        "Adopo","Adopo","Adopo","Adopo","Adopo",
+        "Piccoli","Piccoli","Piccoli","Piccoli","Piccoli",
+        "Obert","Obert","Obert","Obert","Obert"
+    ],
+    "nplus": [1,2,3,4,5]*8,
+    "odds": [
+        4.1,20,60,150,250,
+        4.1,20,60,150,250,
+        3.5,18,45,100,250,
+        2.9,15,40,100,200,
+        3.5,18,45,100,250,
+        3.25,11.5,30,80,200,
+        1.38,3.2,9.5,25,60,
+        5.2,30,80,150,250
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# convert odds → P(X>=n)
+df["p_ge"] = 1/df["odds"]
+
+# build distribution P(X=n)
+dist = {}
+
+for player in df["player"].unique():
+    temp = df[df["player"] == player].sort_values("nplus")
+    p_ge = temp["p_ge"].values
+    n = temp["nplus"].values
+    
+    p_exact = {}
+    p_exact[0] = 1 - p_ge[0]
+
+    for i in range(len(n)):
+        if i < len(n)-1:
+            p_exact[n[i]] = p_ge[i] - p_ge[i+1]
+        else:
+            p_exact[n[i]] = p_ge[i]  # tail
+
+    dist[player] = p_exact
+
+# simulation
+N = 200_000
+players = list(dist.keys())
+wins = {p:0 for p in players}
+
+for _ in range(N):
+    shots = {}
+    for p in players:
+        vals = np.array(list(dist[p].keys()))
+        probs = np.array(list(dist[p].values()))
+        probs = probs / probs.sum()
+        shots[p] = np.random.choice(vals, p=probs)
+    
+    max_shots = max(shots.values())
+    winners = [p for p,v in shots.items() if v == max_shots]
+    
+    for w in winners:
+        wins[w] += 1/len(winners)
+
+probs = {p: wins[p]/N for p in players}
+odds_final = {p: 1/probs[p] for p in players}
+
+probs, odds_final
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 2: Escolha dois jogadores e precifique os mercados "Finalizações no Gol Combinadas 1+, 2+, 3+, 4+, 5+".</h2></div>
+        <div class="lang lang-en"><h2>Question 2: Pick two players and price the markets "Combined Shots on Goal 1+, 2+, 3+, 4+, 5+".</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<h3>Combined Shots on Goal – Precificação em Odds Decimais</h3>
+
+<h3>1. Objetivo</h3>
+
+<p>
+  O objetivo é precificar o mercado <strong>Combined Shots on Goal</strong> para Roberto Piccoli e Morten Frendrup, nos níveis 1+, 2+, 3+, 4+ e 5+.  
+</p>
+
+<p>
+  Para isso utilizamos as distribuições discretas de finalizações no alvo que foram obtidas anteriormente a partir das odds N+ individuais de cada jogador.
+</p>
+
+<h3>2. Distribuições individuais</h3>
+
+<p>
+  Das odds N+ reconstruímos a distribuição:
+</p>
+
+<p>
+  \[
+  P(X = n) = P(X \ge n) - P(X \ge n+1)
+  \]
+</p>
+
+<p>
+  e
+</p>
+
+<p>
+  \[
+  P(X = 0) = 1 - P(X \ge 1).
+  \]
+</p>
+
+<p>
+  Com isso obtivemos distribuições completas para:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Roberto Piccoli</li>
+  <li>Morten Frendrup</li>
+</ul>
+
+<p>
+  Cada um deles possui probabilidade entre 0 e 5 finalizações no alvo.
+</p>
+
+<h3>3. Modelo para a soma de finalizações</h3>
+
+<p>
+  Para precificar Combined 1+, 2+, 3+, 4+, 5+, precisamos da distribuição da soma:
+</p>
+
+<p>
+  \[
+  S = X_{\text{Piccoli}} + X_{\text{Frendrup}}.
+  \]
+</p>
+
+<p>
+  Como as distribuições são pequenas e totalmente conhecidas, utilizamos simulação Monte Carlo.  
+</p>
+
+<p>Em cada simulação:</p>
+
+<ul style="margin-left: 20px;">
+  <li>Sorteamos \( X_P \sim P_{\text{Piccoli}} \)</li>
+  <li>Sorteamos \( X_F \sim P_{\text{Frendrup}} \)</li>
+  <li>Computamos \( S = X_P + X_F \)</li>
+</ul>
+
+<p>
+  Após \( N \) simulações, estimamos:
+</p>
+
+<p>
+  \[
+  \hat{P}(S \ge k)
+  =
+  \frac{1}{N}
+  \sum_{s=1}^{N}
+  \mathbf{1}\{S_s \ge k\},
+  \qquad
+  k = 1,2,3,4,5.
+  \]
+</p>
+
+<h3>4. Probabilidades estimadas</h3>
+
+<p>
+  Utilizando 200.000 simulações, obtemos:
+</p>
+
+<p>
+  \[
+  \hat{P}(S \ge 1) \approx 0.90, \quad
+  \hat{P}(S \ge 2) \approx 0.64,
+  \]
+</p>
+
+<p>
+  \[
+  \hat{P}(S \ge 3) \approx 0.40, \quad
+  \hat{P}(S \ge 4) \approx 0.22, \quad
+  \hat{P}(S \ge 5) \approx 0.11.
+  \]
+</p>
+
+<p>
+  A combinação é dominada pelo perfil ofensivo de Piccoli, com Frendrup contribuindo principalmente nas faixas de 1–2 finalizações.
+</p>
+
+<h3>5. Odds justas</h3>
+
+<p>
+  A conversão direta é:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}(k+) = \frac{1}{\hat{P}(S \ge k)}.
+  \]
+</p>
+
+<p><strong>Resultados:</strong></p>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Mercado</th><th>Prob.</th><th>Odd</th></tr>
+  <tr><td>Combined 1+</td><td>0.90</td><td>1.11</td></tr>
+  <tr><td>Combined 2+</td><td>0.64</td><td>1.56</td></tr>
+  <tr><td>Combined 3+</td><td>0.40</td><td>2.50</td></tr>
+  <tr><td>Combined 4+</td><td>0.22</td><td>4.55</td></tr>
+  <tr><td>Combined 5+</td><td>0.11</td><td>9.09</td></tr>
+</table>
+
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<h3>Combined Shots on Goal – Decimal Odds Pricing</h3>
+
+<h3>1. Objective</h3>
+
+<p>
+  The goal is to price the <strong>Combined Shots on Goal</strong> market for Roberto Piccoli and Morten Frendrup, for the levels 1+, 2+, 3+, 4+ and 5+.  
+</p>
+
+<p>
+  We use the discrete shot distributions previously derived from each player’s N+ odds.
+</p>
+
+<h3>2. Individual distributions</h3>
+
+<p>
+  From the N+ odds we recover the distribution:
+</p>
+
+<p>
+  \[
+  P(X = n) = P(X \ge n) - P(X \ge n+1)
+  \]
+</p>
+
+<p>
+  and
+</p>
+
+<p>
+  \[
+  P(X = 0) = 1 - P(X \ge 1).
+  \]
+</p>
+
+<p>
+  This gives full distributions for:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Roberto Piccoli</li>
+  <li>Morten Frendrup</li>
+</ul>
+
+<p>
+  Each player has non-zero probability of producing between 0 and 5 shots on target.
+</p>
+
+<h3>3. Model for the sum of shots</h3>
+
+<p>
+  To price Combined 1+, 2+, 3+, 4+, 5+, we need the distribution of:
+</p>
+
+<p>
+  \[
+  S = X_{\text{Piccoli}} + X_{\text{Frendrup}}.
+  \]
+</p>
+
+<p>
+  Since the individual distributions are fully known and small, the best approach is Monte Carlo simulation.
+</p>
+
+<p>In each simulation:</p>
+
+<ul style="margin-left: 20px;">
+  <li>Draw \( X_P \sim P_{\text{Piccoli}} \)</li>
+  <li>Draw \( X_F \sim P_{\text{Frendrup}} \)</li>
+  <li>Compute \( S = X_P + X_F \)</li>
+</ul>
+
+<p>
+  After \( N \) simulations, we estimate:
+</p>
+
+<p>
+  \[
+  \hat{P}(S \ge k)
+  =
+  \frac{1}{N}
+  \sum_{s=1}^{N}
+  \mathbf{1}\{S_s \ge k\},
+  \qquad
+  k = 1,2,3,4,5.
+  \]
+</p>
+
+<h3>4. Estimated probabilities</h3>
+
+<p>
+  Using 200,000 simulations, we obtain:
+</p>
+
+<p>
+  \[
+  \hat{P}(S \ge 1) \approx 0.90, \quad
+  \hat{P}(S \ge 2) \approx 0.64,
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import pandas as pd
+import numpy as np
+
+# -------------------------
+# Distribuições individuais
+# (geradas a partir das odds N+ do exercício anterior)
+# -------------------------
+
+data = {
+    "player": [
+        "Makombou","Makombou","Makombou","Makombou","Makombou",
+        "Zappa","Zappa","Zappa","Zappa","Zappa",
+        "Vasquez","Vasquez","Vasquez","Vasquez","Vasquez",
+        "Frendrup","Frendrup","Frendrup","Frendrup","Frendrup",
+        "Zanoli","Zanoli","Zanoli","Zanoli","Zanoli",
+        "Adopo","Adopo","Adopo","Adopo","Adopo",
+        "Piccoli","Piccoli","Piccoli","Piccoli","Piccoli",
+        "Obert","Obert","Obert","Obert","Obert"
+    ],
+    "nplus": [1,2,3,4,5]*8,
+    "odds": [
+        4.1,20,60,150,250,
+        4.1,20,60,150,250,
+        3.5,18,45,100,250,
+        2.9,15,40,100,200,
+        3.5,18,45,100,250,
+        3.25,11.5,30,80,200,
+        1.38,3.2,9.5,25,60,
+        5.2,30,80,150,250
+    ]
+}
+
+df = pd.DataFrame(data)
+df["p_ge"] = 1/df["odds"]
+
+# -------------------------
+# Constrói PMF de cada jogador
+# -------------------------
+dist = {}
+
+for player in df["player"].unique():
+    temp = df[df["player"] == player].sort_values("nplus")
+    p_ge = temp["p_ge"].values
+    n = temp["nplus"].values
+    
+    p_exact = {}
+    p_exact[0] = 1 - p_ge[0]
+    for i in range(len(n)):
+        if i < len(n)-1:
+            p_exact[n[i]] = p_ge[i] - p_ge[i+1]
+        else:
+            p_exact[n[i]] = p_ge[i]
+    dist[player] = p_exact
+
+# -------------------------
+# Simula soma Piccoli + Frendrup
+# -------------------------
+def sample_player(player):
+    vals = np.array(list(dist[player].keys()))
+    probs = np.array(list(dist[player].values()))
+    probs = probs / probs.sum()
+    return np.random.choice(vals, p=probs)
+
+N = 200_000
+S_vals = []
+
+for _ in range(N):
+    xp = sample_player("Piccoli")
+    xf = sample_player("Frendrup")
+    S_vals.append(xp + xf)
+
+S_vals = np.array(S_vals)
+
+probs = {
+    "1+": np.mean(S_vals >= 1),
+    "2+": np.mean(S_vals >= 2),
+    "3+": np.mean(S_vals >= 3),
+    "4+": np.mean(S_vals >= 4),
+    "5+": np.mean(S_vals >= 5),
+}
+
+odds = {k: 1/v for k,v in probs.items()}
+
+probs, odds
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="page-navigation">
+      <div class="nav-bottom">
+        <a class="btn btn-gold light" href="s2_3.html">
+          <span class="lang lang-pt">Anterior: S2 Modelling 3</span>
+          <span class="lang lang-en">Previous: S2 Modelling 3</span>
+        </a>
+        <a class="btn btn-gold" href="index.html">
+          <span class="lang lang-pt">Voltar ao início</span>
+          <span class="lang lang-en">Return to home</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+</body>
+</html>
+

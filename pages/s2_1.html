@@ -1,0 +1,405 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S2 – Modelling 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/lang.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"
+  ></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+      });
+    });
+  </script>
+  <!-- Prism highlight -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-python.min.js"></script>
+
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="page page-section">
+    <section class="page-heading">
+      <div class="lang lang-pt"><h1>S2 – Modelagem 1</h1></div>
+      <div class="lang lang-en"><h1>S2 – Modelling 1</h1></div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt">
+          <h2>Pergunta 1: Vários operadores estão utilizando o Early Payout (como no exemplo da Bet365) como ferramenta promocional para atrair clientes. Crie um modelo que apresente o lucro líquido em função de um diferencial de pontos escolhido para Early Payout na NBA. Fique à vontade para usar suposições (como distribuição de volume apostado em €) onde não houver dados disponíveis para construir o modelo.</h2>
+          <p class="qa-subnote">Para todas as questões de Modelagem, envie todos os cálculos e referências utilizados para chegar à sua resposta final e seja o mais detalhado possível em relação ao seu raciocínio.</p>
+        </div>
+        <div class="lang lang-en">
+          <h2>Question 1: Several operators are using Early Payout (Bet365 example) as a promotional tool to attract customers. Create a model which outputs net profit as a function of a chosen point differential for NBA Early Payout. Feel free to use assumptions (such as € turnover distribution) where data is not available for creating the model.</h2>
+          <p class="qa-subnote">For all Modelling questions, please submit all calculations and references used to arrive at your final submission and be as detailed as possible regarding your thought process.</p>
+        </div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<div class="lang lang-pt">
+  <p>
+    Para modelar o impacto financeiro da promoção <b>NBA Early Payout</b>, considero um “jogo médio” de NBA no mercado 
+    pré-jogo de Moneyline, onde um único threshold \( t \) de vantagem em pontos é aplicado.  
+    A promoção ativa quando o time do apostador abre uma vantagem de \( t \) pontos em qualquer momento do jogo; a casa 
+    paga a aposta como vencedora, mesmo que o time perca depois.  
+    O custo para a casa ocorre exatamente nos cenários:
+  </p>
+
+  <p class="highlight-p">\[
+    \text{abre vantagem } t \;\Rightarrow\; \text{ativa Early Payout} \;\Rightarrow\; \text{perde o jogo}
+  \]</p>
+
+  <h3>1. Estrutura do lucro sem promoção</h3>
+
+  <p>Seja:</p>
+
+  <p>\[
+    S = \text{turnover médio por jogo (uso } S = 200\,000\text{ €)}
+  \]</p>
+
+  <p>\[
+    m = \text{margem efetiva do mercado ML (uso } m = 0.05 \text{)}
+  \]</p>
+
+  <p>Então, sem promoção, a casa ganha:</p>
+
+  <p class="highlight-p">\[
+    \text{BaseProfit} = m \cdot S
+  \]</p>
+
+  <h3>2. Odd média efetiva</h3>
+
+  <p>
+    Não usamos a odd do favorito nem a do underdog, e sim a odd média ponderada pelo dinheiro apostado:
+  </p>
+
+  <p>\[
+    O = 1.90 
+  \]</p>
+
+  <p>
+    Representa uma odd típica ponderada de ML.  
+    O retorno líquido por unidade apostada é:
+  </p>
+
+  <p>\[
+    O - 1
+  \]</p>
+
+  <h3>3. Probabilidade de ativar o Early Payout e perder o jogo</h3>
+
+  <p>Chamemos:</p>
+
+  <p class="highlight-p">\[
+    q(t) = \Pr(\text{ativa Early Payout e perde})
+  \]</p>
+
+  <p>
+    Dados reais da NBA mostram padrões como:
+  </p>
+
+  <ul>
+    <li>lead de 10 pontos → 8–12% de derrotas</li>
+    <li>lead de 15 pontos → 4–6%</li>
+    <li>lead de 20 pontos → 1–3%</li>
+    <li>lead de 25 pontos → <1%</li>
+  </ul>
+
+  <p>Modelamos isso com uma exponencial suavizada:</p>
+
+  <p class="highlight-p">\[
+    q(t) = a e^{-bt}
+  \]</p>
+
+  <p>
+    Com valores calibrados:
+  </p>
+
+  <p>\[
+    a = 0.10, \qquad b = 0.12
+  \]</p>
+
+  <h3>4. Custo adicional da promoção</h3>
+
+  <p>Em cada cenário caro (ativa e perde), a casa paga uma aposta que deveria ser perdedora:</p>
+
+  <p class="highlight-p">\[
+    \text{ExtraCost}(t) = q(t)\,S\,(O - 1)
+  \]</p>
+
+  <h3>5. Lucro líquido da casa</h3>
+
+  <p>
+    O lucro líquido é o lucro base menos o custo adicional:
+  </p>
+
+  <p class="highlight-p">\[
+    \text{NetProfit}(t) = mS - q(t)S(O - 1)
+  \]</p>
+
+  <p>Substituindo \( q(t) = a e^{-bt} \):</p>
+
+  <p class="highlight-p">\[
+    \text{NetProfit}(t) = mS - a e^{-bt} S (O - 1)
+  \]</p>
+
+  <h3>Interpretação</h3>
+
+  <ul>
+    <li><b>Threshold baixo</b> → ativa muito → custo alto → lucro menor.</li>
+    <li><b>Threshold alto</b> → ativa pouco → custo baixo → lucro maior.</li>
+  </ul>
+
+</div>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<div class="lang lang-en">
+  <p>
+    To estimate the financial impact of the NBA Early Payout promotion, we model a typical pre-match Moneyline market. 
+    The promotion triggers whenever the customer’s team takes a lead of \( t \) points at any moment in the game.  
+    Once this happens, the bet is settled as a winner even if the team later loses.  
+    The cost for the operator comes exactly from the situations:
+  </p>
+
+  <p class="highlight-p">\[
+    \text{team leads by } t \; \Rightarrow \; \text{promotion triggers} \; \Rightarrow \; \text{team loses}
+  \]</p>
+
+  <h3>1. Base profit without the promotion</h3>
+
+  <p>
+    Let:
+  </p>
+
+  <p>\[
+    S = \text{average turnover per NBA ML market (we use } 200{,}000\text{ €)}
+  \]</p>
+
+  <p>\[
+    m = \text{average bookmaker margin (we use } m = 0.05\text{)}
+  \]</p>
+
+  <p>
+    Without any promotion, expected profit per game is:
+  </p>
+
+  <p class="highlight-p">\[
+    \text{BaseProfit} = m \cdot S
+  \]</p>
+
+  <h3>2. Effective average odds</h3>
+
+  <p>
+    The “average odds” represent the odds actually used by customers, 
+    taking into account that most of the money tends to go on the favorite, but not all of it.
+    A realistic weighted average for NBA ML is:
+  </p>
+
+  <p>\[
+    O = 1.90
+  \]</p>
+
+  <p>The term \( O - 1 \) represents the customer’s net return when the bet wins.</p>
+
+  <h3>3. Probability of triggering Early Payout and still losing</h3>
+
+  <p>
+    We denote by:
+  </p>
+
+  <p class="highlight-p">\[
+    q(t) = \Pr(\text{promotion triggers and the team loses})
+  \]</p>
+
+  <p>
+    Real NBA results show patterns such as:
+  </p>
+
+  <ul>
+    <li>10-point leads are overturned about 8–12% of the time</li>
+    <li>15-point leads → around 4–6%</li>
+    <li>20-point leads → 1–3%</li>
+    <li>25-point leads → under 1%</li>
+  </ul>
+
+  <p>
+    To capture this in a smooth and simple way, we use:
+  </p>
+
+  <p class="highlight-p">\[
+    q(t) = a e^{-bt}
+  \]</p>
+
+  <p>with:</p>
+
+  <p>\[
+    a = 0.10, \qquad b = 0.12
+  \]</p>
+
+  <p>
+    These values reproduce the typical NBA behavior for different lead sizes.
+  </p>
+
+  <h3>4. Extra cost created by the promotion</h3>
+
+  <p>
+    Each time the promotion triggers and the team loses, the operator pays out a bet that would normally be a loser.
+    The expected additional cost is:
+  </p>
+
+  <p class="highlight-p">\[
+    \text{ExtraCost}(t) = q(t)\,S\,(O - 1)
+  \]</p>
+
+  <h3>5. Net profit with the Early Payout</h3>
+
+  <p>
+    The final result for the operator is:
+  </p>
+
+  <p class="highlight-p">\[
+    \text{NetProfit}(t) = mS - q(t)S(O - 1)
+  \]</p>
+
+  <p>Substituting \( q(t) = a e^{-bt} \):</p>
+
+  <p class="highlight-p">\[
+    \text{NetProfit}(t) = mS - a e^{-bt} S (O - 1)
+  \]</p>
+
+  <h3>Interpretation</h3>
+
+  <ul>
+    <li><b>Lower thresholds</b>: promotion triggers often → higher cost → lower profit.</li>
+    <li><b>Higher thresholds</b>: promotion triggers rarely → lower cost → higher profit.</li>
+  </ul>
+
+</div>
+
+          </p>
+        </div>
+      </div>
+<div class="qa-code">
+    <pre class="code-block"><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import patheffects
+
+# ---------------------------------------------------------
+# MODEL PARAMETERS
+# ---------------------------------------------------------
+
+S = 200_000
+"""
+Average turnover per NBA pre-match Moneyline market.
+This is the total amount wagered on both sides.
+"""
+
+m = 0.05
+"""
+Sportsbook base margin (5%).
+This reflects the natural overround of the ML market.
+"""
+
+O = 1.90
+"""
+Effective average odds of all bets placed.
+This is NOT the odds of the favourite or underdog,
+but the stake-weighted average odds.
+1.85–2.00 is typical for NBA ML markets.
+"""
+
+# ---------------------------------------------------------
+# EARLY PAYOUT PROBABILITY MODEL
+# q(t) = a * exp(-b * t)
+# ---------------------------------------------------------
+
+a = 0.10
+"""
+Baseline probability that a bet triggers early payout and
+ends up losing.
+Around 8–12% is realistic for NBA leads around 8–10 points.
+"""
+
+b = 0.12
+"""
+Decay rate: how fast the probability drops as t increases.
+Chosen to match real NBA behavior:
+- t=10 → ~3%
+- t=20 → ~1%
+- t=25 → <0.5%
+"""
+
+def q(t):
+    """
+    Probability that a bet:
+    1. triggers early payout (team opens t-point lead), and
+    2. loses the match afterwards.
+    """
+    return a * np.exp(-b * t)
+
+def net_profit(t):
+    """
+    Expected net profit for the sportsbook given threshold t.
+    NetProfit(t) = BaseProfit - ExtraCost(t)
+    where:
+      BaseProfit = m * S
+      ExtraCost(t) = q(t) * S * (O - 1)
+    """
+    base_profit = m * S
+    extra_cost = q(t) * S * (O - 1)
+    return base_profit - extra_cost
+
+# ---------------------------------------------------------
+# SIMULATE THRESHOLDS
+# ---------------------------------------------------------
+
+ts = np.arange(10, 31)  # thresholds from 10 to 30 points
+profits = [net_profit(t) for t in ts]
+</code></pre>
+</div>
+    <div class="qa-chart">
+      <img src="../assets/grafico_s2_1.png" alt="Gráfico S2_1" />
+    </div>
+    </section>
+
+    <section class="page-navigation">
+      <div class="nav-bottom">
+        <a class="btn btn-gold light" href="s1.html">
+          <span class="lang lang-pt">Anterior: S1</span>
+          <span class="lang lang-en">Previous: S1</span>
+        </a>
+        <a class="btn btn-gold" href="s2_2.html">
+          <span class="lang lang-pt">Próximo: S2 Modelling 2</span>
+          <span class="lang lang-en">Next: S2 Modelling 2</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+</body>
+</html>

@@ -1,0 +1,928 @@
+﻿<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S2 – Modelling 3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/lang.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body);"
+  ></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false },
+        ],
+      });
+    });
+  </script>
+  <!-- Prism highlight -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-python.min.js"></script>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main class="page page-section">
+    <section class="page-heading">
+      <div class="lang lang-pt"><h1>S2 – Modelagem 3</h1></div>
+      <div class="lang lang-en"><h1>S2 – Modelling 3</h1></div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 1: Precifique um novo mercado de "novelty" para uma partida de futebol futura.</h2></div>
+        <div class="lang lang-en"><h2>Question 1: Price a new novelty market for an upcoming Football game.</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<h3>Passing Distance Match Bet – Precificação em Odds Decimais</h3>
+
+<h3>1. Objetivo</h3>
+
+<p>
+  O mercado <strong>Passing Distance Match Bet</strong> busca prever qual jogador terminará a partida com a maior soma de metros percorridos pelos seus passes completados.  
+  O mercado foi projetado para a final da Copa Libertadores entre Palmeiras e Flamengo.
+</p>
+
+<p>
+  Cada passe completado percorre uma certa distância.  
+  A soma dessas distâncias gera o total individual de cada jogador, e o mercado indica quem tende a liderar esse valor ao final do jogo.
+</p>
+
+<h3>2. Dados utilizados</h3>
+
+<p>
+  Os dados foram obtidos no FBref, com estatísticas referentes à temporada 2025.
+</p>
+
+<p>
+  Para os 10 jogadores analisados (cinco do Palmeiras e cinco do Flamengo), foram utilizadas três informações principais:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li><strong>Passes completados por 90 minutos</strong>: volume médio de passes.</li>
+  <li><strong>Distância média percorrida por passe</strong>: quantos metros cada passe percorre em média.</li>
+  <li><strong>Posição do jogador</strong>: define o estilo de passe e o nível de oscilação natural.</li>
+</ul>
+
+<p>
+  Esses dados permitem modelar o desempenho esperado de cada atleta.
+</p>
+
+<h3>3. Estimativa da distância total esperada</h3>
+
+<p>
+  Para cada jogador, estimamos a distância total esperada como:
+</p>
+
+<p>
+  \[
+  \widehat{\text{Distância total}}
+  =
+  (\text{passes completados})
+  \times
+  (\text{distância média do passe}).
+  \]
+</p>
+
+<p>
+  Esse valor representa o comportamento típico do atleta ao longo da temporada.
+</p>
+
+<h3>4. Estimativa da variação individual</h3>
+
+<p>
+  A posição e a distância média dos passes foram usadas para estimar a variação natural de cada jogador.
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Zagueiros: maior oscilação (passes curtos e longos).</li>
+  <li>Volantes e meias: variação moderada.</li>
+  <li>Extremos e atacantes: menor variação.</li>
+</ul>
+
+<p>
+  Isso permite simular desempenhos tanto abaixo quanto acima da média.
+</p>
+
+<h3>5. Simulação estatística</h3>
+
+<p>
+  Foram gerados 200 mil cenários simulados do jogo.  
+  Em cada cenário:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>cada jogador recebe um valor possível de distância total com base em sua média e variação,</li>
+  <li>identifica-se quem obteve o maior valor,</li>
+  <li>essas ocorrências são acumuladas ao longo das simulações.</li>
+</ul>
+
+<p>
+  O resultado é a probabilidade estimada de cada atleta terminar como líder de passing distance.
+</p>
+
+<h3>6. Conversão das probabilidades em odds</h3>
+
+<p>
+  As probabilidades estimadas foram convertidas para odds decimais, seguindo o mesmo processo de mercados de apostas esportivas.
+</p>
+
+<h3>7. Resultado final</h3>
+
+<p>
+  A partir das simulações, foram geradas as odds finais do mercado.  
+  Os principais valores encontrados foram:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li><strong>Danilo</strong>: 2.63</li>
+  <li><strong>Léo Ortiz</strong>: 3.70</li>
+  <li><strong>Jorginho</strong>: 6.67</li>
+  <li><strong>Bruno Fuchs</strong>: 7.14</li>
+</ul>
+
+<p>
+  Demais jogadores com probabilidades menores apresentaram odds mais altas:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Aníbal: 33.33</li>
+  <li>Andreas Pereira: 66.67</li>
+  <li>Piquerez: 100.0</li>
+  <li>Felipe Anderson: 333.3</li>
+  <li>Arrascaeta: 333.3</li>
+  <li>Luiz Araújo: 500.0</li>
+</ul>
+
+<p>
+  O estudo foi concluído com um mercado baseado em dados reais, modelagem estatística e simulação, oferecendo uma visão objetiva do impacto dos jogadores na progressão da bola durante a partida.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<h3>Passing Distance Match Bet – Decimal Odds Pricing</h3>
+
+<h3>1. Objective</h3>
+
+<p>
+  The <strong>Passing Distance Match Bet</strong> market predicts which player will finish the match with the highest total passing distance.  
+  The market was created for the Copa Libertadores final between Palmeiras and Flamengo.
+</p>
+
+<p>
+  Each completed pass travels a certain distance.  
+  The sum of these distances produces each player’s total, and the market indicates who is most likely to lead this metric.
+</p>
+
+<h3>2. Data used</h3>
+
+<p>
+  The data was sourced from FBref, using player statistics from the 2025 season.
+</p>
+
+<p>
+  For the 10 players analyzed (five from Palmeiras and five from Flamengo), three key inputs were used:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li><strong>Completed passes per 90 minutes</strong>: average passing volume.</li>
+  <li><strong>Average passing distance</strong>: the average number of meters covered per pass.</li>
+  <li><strong>Player position</strong>: determines passing style and natural variation.</li>
+</ul>
+
+<p>
+  These inputs are enough to model the expected performance of each player.
+</p>
+
+<h3>3. Expected total passing distance</h3>
+
+<p>
+  For each player, the expected total distance was defined as:
+</p>
+
+<p>
+  \[
+  \widehat{\text{Total distance}}
+  =
+  (\text{completed passes})
+  \times
+  (\text{average passing distance}).
+  \]
+</p>
+
+<p>
+  This represents typical seasonal performance.
+</p>
+
+<h3>4. Estimating natural variation</h3>
+
+<p>
+  Position and passing profile were used to estimate how much each player’s total distance may vary.
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Center backs: highest variation.</li>
+  <li>Midfielders: moderate variation.</li>
+  <li>Wingers and forwards: lower variation.</li>
+</ul>
+
+<p>
+  This allows simulations where players perform below or above their usual level.
+</p>
+
+<h3>5. Statistical simulation</h3>
+
+<p>
+  A simulation of 200,000 match scenarios was run.  
+  In each scenario:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>each player receives a possible passing-distance value based on his mean and variation,</li>
+  <li>the player with the highest value is identified,</li>
+  <li>these results are counted across all simulations.</li>
+</ul>
+
+<p>
+  This produces the estimated probability of each player finishing as the passing distance leader.
+</p>
+
+<h3>6. Converting probabilities to odds</h3>
+
+<p>
+  The resulting probabilities were converted into decimal odds, matching standard betting-market format.
+</p>
+
+<h3>7. Final results</h3>
+
+<p>
+  The simulation generated the final odds for the market.  
+  The main values were:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li><strong>Danilo</strong>: 2.63</li>
+  <li><strong>Léo Ortiz</strong>: 3.70</li>
+  <li><strong>Jorginho</strong>: 6.67</li>
+  <li><strong>Bruno Fuchs</strong>: 7.14</li>
+</ul>
+
+<p>
+  Other players showed lower probabilities and therefore higher odds:
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>Aníbal: 33.33</li>
+  <li>Andreas Pereira: 66.67</li>
+  <li>Piquerez: 100.0</li>
+  <li>Felipe Anderson: 333.3</li>
+  <li>Arrascaeta: 333.3</li>
+  <li>Luiz Araújo: 500.0</li>
+</ul>
+
+<p>
+  This market was built entirely from real data, statistical modeling and simulation, offering an objective approach to evaluating passing progression impact in the match.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+import numpy as np
+import pandas as pd
+
+# ---------------------------------------------------
+# Dados fornecidos
+# ---------------------------------------------------
+data = [
+    ["PAL","Lateral","Piquerez",44.5,17.97],
+    ["PAL","Zagueiro","Bruno Fuchs",45.9,22.54],
+    ["PAL","Volante","Anibal",42.2,19.94],
+    ["PAL","Meia","Andreas Pereira",39.0,21.27],
+    ["PAL","Extremo","Felipe Anderson",36.1,15.42],
+    ["FLA","Lateral","Danilo",75.2,19.37],
+    ["FLA","Zagueiro","Léo Ortiz",67.2,19.02],
+    ["FLA","Volante","Jorginho",75.1,15.82],
+    ["FLA","Meia","Arrascaeta",35.1,15.30],
+    ["FLA","Extremo","Luiz Araújo",32.4,16.32]
+]
+
+df = pd.DataFrame(data, columns=["Time","Posicao","Jogador","passes","dist"])
+
+# ---------------------------------------------------
+# Piso por posição
+# ---------------------------------------------------
+piso = {
+    "Zagueiro":22,
+    "Lateral":18,
+    "Volante":14,
+    "Meia":12,
+    "Extremo":10
+}
+
+# σ ajustado automaticamente
+df["sigma"] = df.apply(lambda r: max(piso[r["Posicao"]], 0.45*r["dist"]), axis=1)
+
+# Média e SD total
+df["mu"] = df["passes"] * df["dist"]
+df["sd"] = np.sqrt(df["passes"] * (df["sigma"]**2))
+
+# ---------------------------------------------------
+# Simulação Monte Carlo
+# ---------------------------------------------------
+N = 200_000
+counts = {j:0 for j in df["Jogador"]}
+
+for _ in range(N):
+    draws = df.apply(lambda r: np.random.normal(r["mu"], r["sd"]), axis=1).to_dict()
+    max_val = max(draws.values())
+    leaders = [name for name,val in draws.items() if val == max_val]
+    for l in leaders:
+        counts[l] += 1/len(leaders)
+
+probs = {k: counts[k]/N for k in counts}
+odds = {k: round(1/probs[k],2) for k in probs}
+
+print("Probabilidades:", probs)
+print("Odds:", odds)
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 2: Precifique em odds decimais o mercado: Vai nevar em Londres no Dia de Natal?</h2></div>
+        <div class="lang lang-en"><h2>Question 2: Price this market in decimal odds: Will it snow in London on Christmas Day?</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<h3>Will it Snow in London on Christmas Day? – Precificação em Odds Decimais</h3>
+
+<h3>1. Objetivo</h3>
+
+<p>
+  O objetivo é precificar o mercado <strong>Will it Snow in London on Christmas Day?</strong> no formato Sim / Não, utilizando dados históricos de neve observada no dia 25 de dezembro na cidade de Londres.
+</p>
+
+<h3>2. Dados históricos</h3>
+
+<p>
+  Estudos independentes e dados de imprensa especializada indicam que a probabilidade histórica de neve em Londres no Natal é muito baixa.
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>A consultoria BearingPoint estima que a chance histórica é de cerca de 2.4%.</li>
+  <li>O jornal The Guardian, com base no UK Met Office, confirma que Londres é uma das cidades com menor probabilidade de neve no Natal.</li>
+</ul>
+
+<p>
+  Esses valores são consistentes e permitem usar:
+</p>
+
+<p>
+  \[
+  p = 0.024
+  \]
+</p>
+
+<p>
+  onde \( p \) é a probabilidade de nevar em Londres no dia 25 de dezembro.
+</p>
+
+<h3>3. Modelo de probabilidade</h3>
+
+<p>
+  Como o evento é binário (nevar ou não nevar), temos:
+</p>
+
+<p>
+  \[
+  P(\text{Snow}) = p,
+  \qquad
+  P(\text{No Snow}) = 1 - p.
+  \]
+</p>
+
+<p>
+  Para \( p = 0.024 \):
+</p>
+
+<p>
+  \[
+  P(\text{No Snow}) = 0.976.
+  \]
+</p>
+
+<h3>4. Odds justas</h3>
+
+<p>
+  A conversão probabilidade → odd justa é:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}} = \frac{1}{p}.
+  \]
+</p>
+
+<p>
+  Assim:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Yes}}
+  = \frac{1}{0.024}
+  \approx 41.67,
+  \]
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{No}}
+  = \frac{1}{0.976}
+  \approx 1.025.
+  \]
+</p>
+
+<h3>5. Aplicação de margem</h3>
+
+<p>
+  Mercados meteorológicos normalmente usam margens altas.  
+  Assumimos 10%:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}
+  = \frac{\text{odd}^{\text{fair}}}{1.10}.
+  \]
+</p>
+
+<p>
+  Aplicando:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_{\text{Yes}}
+  \approx \frac{41.67}{1.10} \approx 37.88,
+  \qquad
+  \text{odd}^{\text{final}}_{\text{No}}
+  \approx \frac{1.025}{1.10} \approx 0.93.
+  \]
+</p>
+
+<p>
+  Odds abaixo de 1.00 não são viáveis, então o mercado ajustaria o “No” para algo como 1.03–1.05.
+</p>
+
+<h3>6. Odds finais propostas</h3>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Mercado</th><th>Prob.</th><th>Odd Final</th></tr>
+  <tr><td>Yes – Will it snow?</td><td>2.4%</td><td>38.0</td></tr>
+  <tr><td>No – Will it snow?</td><td>97.6%</td><td>1.04</td></tr>
+</table>
+
+<p>
+  Esses valores seguem o processo dados → probabilidade → modelo → odds → margem e estão alinhados com a climatologia de Londres.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<h3>Will it Snow in London on Christmas Day? – Decimal Odds Pricing</h3>
+
+<h3>1. Objective</h3>
+
+<p>
+  The goal is to price the <strong>Will it Snow in London on Christmas Day?</strong> market in a Yes / No format, using historical observations of snowfall on December 25 in London.
+</p>
+
+<h3>2. Historical data</h3>
+
+<p>
+  Independent studies and media sources show that snowfall in London on Christmas Day is very rare.
+</p>
+
+<ul style="margin-left: 20px;">
+  <li>A study by BearingPoint estimates the historical probability at about 2.4%.</li>
+  <li>The Guardian, citing the UK Met Office, confirms that London has one of the lowest chances of Christmas snowfall.</li>
+</ul>
+
+<p>
+  These values are consistent, so we take:
+</p>
+
+<p>
+  \[
+  p = 0.024
+  \]
+</p>
+
+<p>
+  where \( p \) is the probability of snowfall in London on December 25.
+</p>
+
+<h3>3. Probability model</h3>
+
+<p>
+  Since the event is binary:
+</p>
+
+<p>
+  \[
+  P(\text{Snow}) = p,
+  \qquad
+  P(\text{No Snow}) = 1 - p.
+  \]
+</p>
+
+<p>
+  For \( p = 0.024 \):
+</p>
+
+<p>
+  \[
+  P(\text{No Snow}) = 0.976.
+  \]
+</p>
+
+<h3>4. Fair odds</h3>
+
+<p>
+  The probability-to-odds conversion is:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}} = \frac{1}{p}.
+  \]
+</p>
+
+<p>
+  Therefore:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Yes}}
+  = \frac{1}{0.024}
+  \approx 41.67,
+  \]
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{No}}
+  = \frac{1}{0.976}
+  \approx 1.025.
+  \]
+</p>
+
+<h3>5. Applying margin</h3>
+
+<p>
+  Weather markets usually include high margins.  
+  We adopt 10%:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}
+  = \frac{\text{odd}^{\text{fair}}}{1.10}.
+  \]
+</p>
+
+<p>
+  Applying:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_{\text{Yes}}
+  \approx \frac{41.67}{1.10} \approx 37.88,
+  \qquad
+  \text{odd}^{\text{final}}_{\text{No}}
+  \approx \frac{1.025}{1.10} \approx 0.93.
+  \]
+</p>
+
+<p>
+  Odds below 1.00 are not practical, so real markets would adjust the “No” price to about 1.03–1.05.
+</p>
+
+<h3>6. Final proposed odds</h3>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Market</th><th>Prob.</th><th>Fair Odd</th><th>Final Odd</th></tr>
+  <tr><td>Yes – Will it snow?</td><td>2.4%</td><td>41.67</td><td>38.0</td></tr>
+  <tr><td>No – Will it snow?</td><td>97.6%</td><td>1.025</td><td>1.04</td></tr>
+</table>
+
+<p>
+  These odds reflect historical weather patterns and follow the same sequence used earlier: data → probability → model → fair odds → margin.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+# Probabilidade histórica de nevar em Londres no Natal
+p = 0.024
+
+# odds justas
+odd_yes_fair = 1/p
+odd_no_fair  = 1/(1-p)
+
+# margem de 10%
+book = 1.10
+odd_yes_final = odd_yes_fair / book
+odd_no_final  = odd_no_fair / book
+
+odd_yes_fair, odd_no_fair, odd_yes_final, odd_no_final
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="qa-block">
+      <header class="qa-header">
+        <div class="lang lang-pt"><h2>Pergunta 3: Precifique em odds decimais o mercado: Vai nevar em Estocolmo no Dia de Natal?</h2></div>
+        <div class="lang lang-en"><h2>Question 3: Price this market in decimal odds: Will it snow in Stockholm on Christmas Day?</h2></div>
+      </header>
+      <div class="qa-body">
+        <div class="lang lang-pt">
+          <p>
+<h3>Will it Snow in Stockholm on Christmas Day? – Precificação em Odds Decimais</h3>
+
+<h3>1. Dados e pressupostos</h3>
+
+<p>
+  Um estudo da consultoria BearingPoint indica que a probabilidade histórica de haver neve em Estocolmo no dia 25 de dezembro é de aproximadamente <strong>34.2%</strong>, considerando a ocorrência de flocos ou cobertura de neve na cidade.
+</p>
+
+<p>
+  Utilizamos esse valor como estimativa base para o evento.
+</p>
+
+<h3>2. Modelo de probabilidade</h3>
+
+<p>
+  Para um evento binário (nevar / não nevar), temos:
+</p>
+
+<p>
+  \[
+  P(\text{Snow}) = 0.342,
+  \qquad
+  P(\text{No Snow}) = 1 - 0.342 = 0.658.
+  \]
+</p>
+
+<h3>3. Odds justas</h3>
+
+<p>
+  A conversão probabilidade → odd justa é:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}} = \frac{1}{p}.
+  \]
+</p>
+
+<p>
+  Assim:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Yes}}
+  = \frac{1}{0.342}
+  \approx 2.92,
+  \]
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{No}}
+  = \frac{1}{0.658}
+  \approx 1.52.
+  \]
+</p>
+
+<h3>4. Aplicação de margem</h3>
+
+<p>
+  Assumimos uma margem de aproximadamente 10%, como nos exemplos anteriores.  
+  O ajuste é feito por:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}
+  = \frac{\text{odd}^{\text{fair}}}{1.10}.
+  \]
+</p>
+
+<p>
+  Logo:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_{\text{Yes}}
+  \approx \frac{2.92}{1.10}
+  \approx 2.65,
+  \qquad
+  \text{odd}^{\text{final}}_{\text{No}}
+  \approx \frac{1.52}{1.10}
+  \approx 1.38.
+  \]
+</p>
+
+<h3>5. Odds finais propostas</h3>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Mercado</th><th>Prob.</th><th>Odd Final</th></tr>
+  <tr><td>Yes – Vai nevar em Estocolmo?</td><td>34.2%</td><td>~2.65</td></tr>
+  <tr><td>No – Não vai nevar em Estocolmo?</td><td>65.8%</td><td>~1.38</td></tr>
+</table>
+
+<p>
+  Essas odds seguem o processo dados → probabilidade → odds → margem e refletem a climatologia histórica da cidade.
+</p>
+
+          </p>
+        </div>
+        <div class="lang lang-en">
+          <p>
+<h3>Will it Snow in Stockholm on Christmas Day? – Decimal Odds Pricing</h3>
+
+<h3>1. Data and assumptions</h3>
+
+<p>
+  A study by BearingPoint indicates that the historical probability of snowfall in Stockholm on December 25 is approximately <strong>34.2%</strong>, considering either falling snow or ground snow coverage.
+</p>
+
+<p>
+  We use this value as the base estimate for the event.
+</p>
+
+<h3>2. Probability model</h3>
+
+<p>
+  For a binary event (snow / no snow), we have:
+</p>
+
+<p>
+  \[
+  P(\text{Snow}) = 0.342,
+  \qquad
+  P(\text{No Snow}) = 1 - 0.342 = 0.658.
+  \]
+</p>
+
+<h3>3. Fair odds</h3>
+
+<p>
+  Probability-to-odds conversion:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}} = \frac{1}{p}.
+  \]
+</p>
+
+<p>
+  Therefore:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{Yes}}
+  = \frac{1}{0.342}
+  \approx 2.92,
+  \]
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{fair}}_{\text{No}}
+  = \frac{1}{0.658}
+  \approx 1.52.
+  \]
+</p>
+
+<h3>4. Applying margin</h3>
+
+<p>
+  We assume a margin of about 10 percent.  
+  The final odds are:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}
+  = \frac{\text{odd}^{\text{fair}}}{1.10}.
+  \]
+</p>
+
+<p>
+  Thus:
+</p>
+
+<p>
+  \[
+  \text{odd}^{\text{final}}_{\text{Yes}}
+  \approx \frac{2.92}{1.10}
+  \approx 2.65,
+  \qquad
+  \text{odd}^{\text{final}}_{\text{No}}
+  \approx \frac{1.52}{1.10}
+  \approx 1.38.
+  \]
+</p>
+
+<h3>5. Final proposed odds</h3>
+
+<table border="1" cellpadding="6" style="border-collapse: collapse; margin-left: 20px;">
+  <tr><th>Market</th><th>Prob.</th><th>Final Odd</th></tr>
+  <tr><td>Yes – Will it snow in Stockholm?</td><td>34.2%</td><td>~2.65</td></tr>
+  <tr><td>No – Will it snow in Stockholm?</td><td>65.8%</td><td>~1.38</td></tr>
+</table>
+
+<p>
+  These odds follow the standard process used before: data → probability → odds → margin, and reflect Stockholm’s historical climate conditions.
+</p>
+
+          </p>
+        </div>
+      </div>
+      <div class="qa-code">
+        <pre class="code-block"><code class="language-python">
+# Probabilidade histórica de nevar em Estocolmo no Natal
+p = 0.342  # Fonte: BearingPoint / Consultancy.eu
+
+# Odds justas
+odd_yes_fair = 1 / p
+odd_no_fair = 1 / (1 - p)
+
+# Margem (mesmo padrão do exercício anterior)
+book = 1.10  # 10%
+
+odd_yes_final = odd_yes_fair / book
+odd_no_final = odd_no_fair / book
+
+print("Probabilidade de neve:", p)
+print("Odd justa YES:", odd_yes_fair)
+print("Odd justa NO:", odd_no_fair)
+print("Odd final YES:", odd_yes_final)
+print("Odd final NO:", odd_no_final)
+
+</code></pre>
+      </div>
+    </section>
+
+    <section class="page-navigation">
+      <div class="nav-bottom">
+        <a class="btn btn-gold light" href="s2_2.html">
+          <span class="lang lang-pt">Anterior: S2 Modelling 2</span>
+          <span class="lang lang-en">Previous: S2 Modelling 2</span>
+        </a>
+        <a class="btn btn-gold" href="s2_4.html">
+          <span class="lang lang-pt">Próximo: S2 Modelling 4</span>
+          <span class="lang lang-en">Next: S2 Modelling 4</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer"></footer>
+</body>
+</html>
