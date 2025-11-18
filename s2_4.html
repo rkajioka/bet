@@ -118,7 +118,7 @@
 <h3>3. Modelo para o mercado “Most Shots on Goal”</h3>
 
 <p>
-  Após recuperar todas as distribuições \( P(X = n) \), utilizamos simulação Monte Carlo para estimar o mercado.
+  Após recuperar todas as distribuições \( P(X = n) \), foi utilizado simulação Monte Carlo para estimar o mercado.
 </p>
 
 <p>Em cada simulação:</p>
@@ -444,7 +444,7 @@ probs, odds_final
 </p>
 
 <p>
-  Para isso utilizamos as distribuições discretas de finalizações no alvo que foram obtidas anteriormente a partir das odds N+ individuais de cada jogador.
+  Para isso foi utilizado as distribuições discretas de finalizações no alvo que foram obtidas anteriormente a partir das odds N+ individuais de cada jogador.
 </p>
 
 <h3>2. Distribuições individuais</h3>
@@ -485,7 +485,7 @@ probs, odds_final
 <h3>3. Modelo para a soma de finalizações</h3>
 
 <p>
-  Para precificar Combined 1+, 2+, 3+, 4+, 5+, precisamos da distribuição da soma:
+  Para precificar Combined 1+, 2+, 3+, 4+, 5+, é necessário a distribuição da soma:
 </p>
 
 <p>
@@ -495,19 +495,19 @@ probs, odds_final
 </p>
 
 <p>
-  Como as distribuições são pequenas e totalmente conhecidas, utilizamos simulação Monte Carlo.  
+  Como as distribuições são pequenas e totalmente conhecidas, foi utilizado simulação Monte Carlo.  
 </p>
 
 <p>Em cada simulação:</p>
 
 <ul style="margin-left: 20px;">
-  <li>Sorteamos \( X_P \sim P_{\text{Piccoli}} \)</li>
-  <li>Sorteamos \( X_F \sim P_{\text{Frendrup}} \)</li>
-  <li>Computamos \( S = X_P + X_F \)</li>
+  <li>Foi sorteado \( X_P \sim P_{\text{Piccoli}} \)</li>
+  <li>Foi sorteado \( X_F \sim P_{\text{Frendrup}} \)</li>
+  <li>Foi comportado \( S = X_P + X_F \)</li>
 </ul>
 
 <p>
-  Após \( N \) simulações, estimamos:
+  Após \( N \) simulações, foi estimado:
 </p>
 
 <p>

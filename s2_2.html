@@ -75,9 +75,6 @@
       </header>
       <div class="qa-body">
         <div class="lang lang-pt">
-          <p>
-            Vou estruturar como resposta de case: explico o raciocínio, mostro as fórmulas principais e entrego as odds finais da 3ª rodada.
-          </p>
 
           <h3>Ideia geral</h3>
 
@@ -264,10 +261,6 @@
 
         </div>
         <div class="lang lang-en">
-          <p>
-            I will structure this as a case answer: I explain the logic, show the main formulas, and present the final odds for Round 3.
-          </p>
-
           <h3>Main idea</h3>
 
           <p>
@@ -1140,9 +1133,9 @@ print("Odds finais:",final_odds)
 </p>
 
 <ul style="margin-left: 20px;">
-  <li>Sorteamos \( G_{ENG}, G_{GER}, G_{FRA}, G_{NED} \) de Poisson com médias correspondentes.</li>
-  <li>Identificamos a maior contagem de gols.</li>
-  <li>Dividimos 1 unidade entre os líderes.</li>
+  <li>Foi sorteado \( G_{ENG}, G_{GER}, G_{FRA}, G_{NED} \) de Poisson com médias correspondentes.</li>
+  <li>Foi identificado a maior contagem de gols.</li>
+  <li>Foi dividido 1 unidade entre os líderes.</li>
   <li>Repetimos para \( N = 200{,}000 \) simulações.</li>
 </ul>
 
@@ -1662,7 +1655,7 @@ print("Final odds with margin:", priced_odds)
 </p>
 
 <p>
-  Em mercados especiais como este, operadores costumam aplicar margem adicional.  
+  Em mercados especiais como este, é normal a aplicação de margem adicional.  
   Supondo um book de \( B \approx 1.07 \):
 </p>
 
@@ -1883,7 +1876,7 @@ print("Priced odds (with 7% margin):", priced_odd)
 <h3>Expectativa de gols da Inglaterra</h3>
 
 <p>
-  Usamos dois tipos de mercado:
+  Foram utilizados dois tipos de mercado:
 </p>
 
 <ul style="margin-left: 20px;">
@@ -1995,7 +1988,7 @@ print("Priced odds (with 7% margin):", priced_odd)
 <h3>Modelagem do total de gols da Inglaterra</h3>
 
 <p>
-  Modelamos:
+  Foi modelado:
 </p>
 
 <p>
@@ -2081,10 +2074,6 @@ print("Priced odds (with 7% margin):", priced_odd)
   <li>England Over 7.5: <strong>1.75</strong></li>
   <li>England Under 7.5: <strong>2.05</strong></li>
 </ul>
-
-<p>
-  Esses preços são consistentes com a expectativa de gols implícita nos mercados e com uma linha natural de props de torneio.
-</p>
 
           </p>
         </div>
@@ -2308,9 +2297,6 @@ print("Priced odds (with 7% margin):", priced_odd)
   <li>England Under 7.5: <strong>2.05</strong></li>
 </ul>
 
-<p>
-  These prices align with the expected scoring level implied by the markets and with a natural tournament totals line.
-</p>
 
           </p>
         </div>
@@ -2508,7 +2494,7 @@ print("Priced Under 7.5:", priced_under)
 <h3>4. Distribuição e escolha da linha</h3>
 
 <p>
-  Modelamos o total de saves como:
+  Foi modelado o total de saves como:
 </p>
 
 <p>
@@ -2609,9 +2595,6 @@ print("Priced Under 7.5:", priced_under)
   <li><strong>Under 38.5: 2.06</strong></li>
 </ul>
 
-<p>
-  As odds são consistentes com a expectativa de saves, com a taxa média gol/SOT e com uma margem realista para mercados especiais.
-</p>
 
           </p>
         </div>
@@ -2801,10 +2784,6 @@ print("Priced Under 7.5:", priced_under)
   <li><strong>Over 38.5: 1.74</strong></li>
   <li><strong>Under 38.5: 2.06</strong></li>
 </ul>
-
-<p>
-  These odds match the expected number of saves, the goal-to-shot conversion rate and a realistic margin for a special tournament market.
-</p>
 
           </p>
         </div>
